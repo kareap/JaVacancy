@@ -8,9 +8,9 @@ public class Vacancy {
     private Experience experience;
     private int salary;
     private String jobDescription;
-    private long jobId;
+    private String jobId;
 
-    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, int salary, String jobDescription, long jobId) {
+    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, int salary, String jobDescription, String jobId) {
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.location = location;
@@ -44,7 +44,7 @@ public class Vacancy {
         return jobDescription;
     }
 
-    public long getJobId(){
+    public String getJobId(){
         return jobId;
     }
 }

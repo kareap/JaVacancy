@@ -8,7 +8,7 @@
     <h1>All available jobs</h1>
     <hr>
     <div th:each="job : ${vacancyList}">
-        <a th:text="${job.getJobTitle()}" th:href="'/'"></a>
+        <a th:text="${job.getJobTitle()}" th:href="'/'+${job.getJobId()}"></a>
         <p th:text="${job.getCompanyName()}"></p>
         <hr>
     </div>
