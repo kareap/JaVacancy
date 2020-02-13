@@ -5,15 +5,16 @@
     <title>Add Vacancy</title>
 </head>
 <body>
-<form th:action="" method="POST" th:object="${vacancy}">
+<form action="/add" method="POST" th:object="${vacancy}">
     <input type="text" name="title" th:field="*{title}" placeholder="Job Title">
     <input type="text" name="company" th:field="*{company}" placeholder="Company Name">
     <input type="number" name="salary" th:field="*{salary}" placeholder="Salary">
 
     <select>
-        <option th:value="junior">Junior</option>
-        <option></option>
-        <option></option>
+        <option th:each="experience : ${T(com.example.javacancy.Experience)}"
+                th:value="${experience}"
+                th:text="${experience}">
+        </option>
     </select>
 
     <input type="area" name="jobDescription" th:field="*{jobDescription}" placeholder="Job Description">

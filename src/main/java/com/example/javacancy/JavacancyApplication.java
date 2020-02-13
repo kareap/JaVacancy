@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +65,19 @@ public class JavacancyApplication {
     }
 
     @GetMapping ("/add")
-    public String addVacancy () {
+    public String addVacancy (@ModelAttribute Vacancy vacancy, Model m) {
+        m.addAttribute("vacancy", vacancy);
         return "addVacancy";
+    }
+
+    @PostMapping("/add")
+    public String addVacancy (@ModelAttribute Vacancy vacancy) {
+
+        Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), Location.OSLO, vacancy.getExperience(), 2504444, vacancy.getJobDescription(), "22445");
+        vacancyList.add(newVacancy);
+
+
+        return "redirect:/";
     }
 
 }
