@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>JaVacancy</title>
 </head>
 <body>
-    <h1>Test</h1>
+    <h1>All available jobs</h1>
+    <hr>
+    <div th:each="job : ${vacancyList}">
+        <a th:text="${job.getJobTitle()}" th:href="'/'"></a>
+        <p th:text="${job.getCompanyName()}"></p>
+        <hr>
+    </div>
+
 </body>
 </html>

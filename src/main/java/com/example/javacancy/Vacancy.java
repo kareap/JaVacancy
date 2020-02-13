@@ -8,14 +8,16 @@ public class Vacancy {
     private Experience experience;
     private int salary;
     private String jobDescription;
+    private long jobId;
 
-    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, int salary, String jobDescription) {
+    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, int salary, String jobDescription, long jobId) {
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.location = location;
         this.experience = experience;
         this.salary = salary;
         this.jobDescription = jobDescription;
+        this.jobId = jobId;
     }
 
     public String getJobTitle() {
@@ -40,5 +42,9 @@ public class Vacancy {
 
     public String getJobDescription() {
         return jobDescription;
+    }
+
+    public long getJobId(){
+        return jobId;
     }
 }
