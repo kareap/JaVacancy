@@ -6,6 +6,11 @@
 </head>
 <body>
     <h3 th:text="${job.getJobTitle()}"></h3>
+    <p th:text="'Company: ' + ${job.getCompanyName()}"></p>
+    <p th:text="'Location: ' + ${job.getLocation()}"></p>
+    <p th:text="'Experience: ' + ${job.getExperience()}"></p>
+    <p th:text="'Salary: ' + ${job.getSalary()}"></p>
     <p th:text="${job.getJobDescription()}"></p>
+    <a href="/">Back To Homepage</a>
 </body>
 </html>

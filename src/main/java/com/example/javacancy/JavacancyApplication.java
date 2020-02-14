@@ -4,10 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +45,33 @@ public class JavacancyApplication {
         return "index";
     }
 
-    @GetMapping("/{experience")
-    public String getExperience() {
+    @GetMapping("/experience")
+    public String getExperience(@RequestParam String experienceLevel, Model m) {
+        List <Vacancy> experienceList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size() ; i++) {
+            if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
+                experienceList.add(vacancyList.get(i));
+            }
+        }
+        m.addAttribute("vacancyList", experienceList);
         
-        return
+        return "index";
     }
 
-    @GetMapping("/{jobId}")
+    @GetMapping("/location")
+    public String getLocation(@RequestParam String location, Model m) {
+        List <Vacancy> locationList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size() ; i++) {
+            if (vacancyList.get(i).getLocation().toString().equals(location)) {
+                locationList.add(vacancyList.get(i));
+            }
+        }
+        m.addAttribute("vacancyList", locationList);
+
+        return "index";
+    }
+
+    @GetMapping("/vacancy/{jobId}")
     public String getIndex(Model m, @PathVariable(required = true) String jobId) {
         Vacancy currentJob = null;
 

@@ -6,10 +6,21 @@
 </head>
 <body>
     <h1>All available jobs</h1>
+    <a href="/" >All Vacancies</a>
+    <br>
+    <a href="/location?location=Oslo" >Oslo</a>
+    <a href="/location?location=Bergen" >Bergen</a>
+    <a href="/location?location=Trondheim" >Trondheim</a>
+    <a href="/location?location=Stavanger" >Stavanger</a>
+    <br>
+    <a href="/experience?experienceLevel=Entry" >Entry</a>
+    <a href="/experience?experienceLevel=Mid" >Mid</a>
+    <a href="/experience?experienceLevel=Senior" >Senior</a>
+    <br>
     <a href="/add" >Add vacancy</a>
     <hr>
     <div th:each="job : ${vacancyList}">
-        <a th:text="${job.getJobTitle()}" th:href="'/'+${job.getJobId()}"></a>
+        <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
         <p th:text="${job.getCompanyName()}"></p>
         <hr>
     </div>
