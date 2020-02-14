@@ -20,7 +20,7 @@
     <!--    Search job vacancies -->
     <div id="search">
     <form th:action="'/'" method="post" th:object="${search}">
-        <input type="text" name="title" th:field="*{searchText}" th:placeholder="${searchBar}">
+        <input type="text" name="title" th:field="*{searchText}" placeholder="Search here">
         <input type="submit" value="Search">
     </form>
     </div>
@@ -41,6 +41,10 @@
     <a href="/add" >Add vacancy</a>
 
     <hr>
+    
+    <div th:if="${searchBar != null}">
+        <p th:text="'Results for: ' + ${searchBar}"></p>
+    </div>
 
 <!--    Print job vacancies -->
     <div th:each="job : ${vacancyList}">

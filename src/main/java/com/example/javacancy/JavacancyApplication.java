@@ -96,9 +96,7 @@ public class JavacancyApplication {
     public String getSalaryRange1(@RequestParam String salaryRange, Model m) {
         int index = salaryRange.indexOf('-');
         Integer startNumber = Integer.parseInt(salaryRange.substring(0, index));
-        Integer endNumber = Integer.parseInt(salaryRange.substring(index);
-
-        System.out.println(startNumber);
+        Integer endNumber = Integer.parseInt(salaryRange.substring(index));
 
         List<Vacancy> salaryList = new ArrayList<>();
         for (int i = 0; i < vacancyList.size(); i++) {
@@ -147,17 +145,17 @@ public class JavacancyApplication {
         return "application";
     }
 
-    @PostMapping ("/success")
-    public String sentApplication (@ModelAttribute Vacancy vacancy) {
-        
-        return "redirect:/";
-    }
-
-
-    @GetMapping("/success")
-    public String sentApplication() {
-        return "sentApplication";
-    }
+//    @PostMapping ("/success")
+//    public String sentApplication (@ModelAttribute Vacancy vacancy) {
+//
+//        return "redirect:/";
+//    }
+//
+//
+//    @GetMapping("/success")
+//    public String sentApplication() {
+//        return "sentApplication";
+//    }
 
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {
