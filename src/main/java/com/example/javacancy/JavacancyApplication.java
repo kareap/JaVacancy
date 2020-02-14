@@ -84,8 +84,10 @@ public class JavacancyApplication {
     }
     @GetMapping("/salary")
     public String getSalaryRange1(@RequestParam String salaryRange, Model m) {
-        Integer startNumber = Integer.parseInt(salaryRange.substring(0, 5));
-        Integer endNumber = Integer.parseInt(salaryRange.substring(7, 13));
+        int index = salaryRange.indexOf('-');
+        Integer startNumber = Integer.parseInt(salaryRange.substring(0, index));
+        Integer endNumber = Integer.parseInt(salaryRange.substring(index);
+
         System.out.println(startNumber);
 
         List <Vacancy> salaryList = new ArrayList<>();
