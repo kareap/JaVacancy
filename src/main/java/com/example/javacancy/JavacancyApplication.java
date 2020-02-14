@@ -38,7 +38,8 @@ public class JavacancyApplication {
 
 
     @GetMapping("/")
-    public String getIndex(Model m, @RequestParam(required = false) String searchTerm) {
+    public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
+        m.addAttribute("search", searchObject);
 
         if(searchTerm != null){
             List<Vacancy> searchList = vacancySearch(searchTerm, vacancyList);
@@ -51,9 +52,9 @@ public class JavacancyApplication {
     }
 
     @PostMapping("/")
-    public String postIndex(Model m, @RequestParam(required = false) String searchTerm) {
-        
-        return "redirect:/?searchTerm=" + searchTerm;
+    public String postIndex(Model m, @ModelAttribute Search search) {
+
+        return "redirect:/?searchTerm=" + search.getSearchText();
     }
 
     @GetMapping("/experience")
