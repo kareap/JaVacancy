@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>All available jobs</h1>
+    <a href="/add" >Add vacancy</a>
     <hr>
     <div th:each="job : ${vacancyList}">
         <a th:text="${job.getJobTitle()}" th:href="'/'+${job.getJobId()}"></a>

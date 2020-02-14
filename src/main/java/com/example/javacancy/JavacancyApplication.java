@@ -48,6 +48,12 @@ public class JavacancyApplication {
         return "index";
     }
 
+    @GetMapping("/{experience")
+    public String getExperience() {
+        
+        return
+    }
+
     @GetMapping("/{jobId}")
     public String getIndex(Model m, @PathVariable(required = true) String jobId) {
         Vacancy currentJob = null;
@@ -72,10 +78,9 @@ public class JavacancyApplication {
 
     @PostMapping("/add")
     public String addVacancy (@ModelAttribute Vacancy vacancy) {
-        String randomId = String.valueOf((int) Math.random() * 500000);
+        String randomId = String.valueOf((int) (Math.random() * 500000));
         Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription(), randomId);
         vacancyList.add(newVacancy);
-
 
         return "redirect:/";
     }

@@ -6,26 +6,28 @@
 </head>
 <body>
 <form action="/add" method="POST" th:object="${vacancy}">
-    <input type="text" name="title" th:field="*{jobTitle}" placeholder="Job Title" autofocus>
-    <input type="text" name="company" th:field="*{companyName}" placeholder="Company Name">
-    <input type="number" name="salary" th:field="*{salary}" placeholder="Salary">
+    <input required type="text" name="title" th:field="*{jobTitle}" placeholder="Job Title" autofocus>
+    <input required type="text" name="company" th:field="*{companyName}" placeholder="Company Name">
+    <input required type="number" name="salary" th:field="*{salary}" placeholder="Salary">
 
-    <select>
+    <select required>
+        <option value="" selected disabled hidden>Experience Level</option>
         <option th:each="experience : ${T(com.example.javacancy.Experience).values()}"
                 th:value="${experience}"
                 th:text="${experience}">
         </option>
     </select>
 
-    <select>
+    <select required>
+        <option value="" selected disabled hidden>Location</option>
         <option th:each="location : ${T(com.example.javacancy.Location).values()}"
                 th:value="${location}"
                 th:text="${location}">
         </option>
     </select>
-    <textarea name="jobDescription" id="" cols="30" rows="10" th:field="*{jobDescription}" placeholder="Job Description"></textarea>
+    <textarea required name="jobDescription" id="" cols="30" rows="10" th:field="*{jobDescription}" placeholder="Job Description"></textarea>
     <input type="submit" value="Publish job">
 </form>
-
+<a href="/">Cancel</a>
 </body>
 </html>
