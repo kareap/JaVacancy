@@ -38,9 +38,27 @@ public class JavacancyApplication {
 
 
     @GetMapping("/")
-    public String getIndex(Model m) {
+    public String getIndex(Model m, @RequestParam(required = false) String searchTerm) {
 
-        m.addAttribute("vacancyList", vacancyList);
+        if(searchTerm != null){
+            List<Vacancy> searchList = vacancySearch(searchTerm, vacancyList);
+            m.addAttribute("vacancyList", searchList);
+        } else {
+            m.addAttribute("vacancyList", vacancyList);
+        }
+
+        return "index";
+    }
+
+    @PostMapping("/")
+    public String postIndex(Model m, @RequestParam(required = false) String searchTerm) {
+
+        if(searchTerm != null){
+            List<Vacancy> searchList = vacancySearch(searchTerm, vacancyList);
+            m.addAttribute("vacancyList", searchList);
+        } else {
+            m.addAttribute("vacancyList", vacancyList);
+        }
 
         return "index";
     }
@@ -72,7 +90,7 @@ public class JavacancyApplication {
     }
 
     @GetMapping("/vacancy/{jobId}")
-    public String getIndex(Model m, @PathVariable(required = true) String jobId) {
+    public String getVacancy(Model m, @PathVariable(required = true) String jobId) {
         Vacancy currentJob = null;
 
         for(Vacancy v : vacancyList){
@@ -100,6 +118,27 @@ public class JavacancyApplication {
         vacancyList.add(newVacancy);
 
         return "redirect:/";
+    }
+
+    // Search in title and job description
+    public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list){
+        List<Vacancy> newList = new ArrayList<>();
+        searchTerm = searchTerm.toLowerCase();
+
+        // Looping over each job in the list
+        for(Vacancy vacancy : list){
+
+            // If search term is in job title
+            if(vacancy.getJobTitle().toLowerCase().contains(searchTerm)){
+                newList.add(vacancy);
+
+            // If search term is in job description
+            } else if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)){
+                newList.add(vacancy);
+            }
+        }
+
+        return newList;
     }
 
 }
