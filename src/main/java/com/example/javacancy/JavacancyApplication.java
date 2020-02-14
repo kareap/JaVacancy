@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 @Controller
@@ -133,8 +135,10 @@ public class JavacancyApplication {
 
     @PostMapping("/add")
     public String addVacancy(@ModelAttribute Vacancy vacancy) {
-        String randomId = String.valueOf((int) (Math.random() * 500000));
-        Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription(), randomId);
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        String jobId = String.valueOf(random.nextInt(500000,999999));
+        System.out.println(vacancy.getExperience());
+        Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription(), jobId);
         vacancyList.add(newVacancy);
 
         return "redirect:/";
@@ -145,17 +149,20 @@ public class JavacancyApplication {
         return "application";
     }
 
-//    @PostMapping ("/success")
-//    public String sentApplication (@ModelAttribute Vacancy vacancy) {
-//
-//        return "redirect:/";
-//    }
-//
-//
-//    @GetMapping("/success")
-//    public String sentApplication() {
-//        return "sentApplication";
-//    }
+    @PostMapping("/application")
+    public String sentApplication(@ModelAttribute Application application) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        String appId = String.valueOf(random.nextInt(100000,499999));
+        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText(), appId);
+
+        return "redirect:/success";
+    }
+
+
+    @GetMapping("/success")
+    public String success() {
+        return "sentApplication";
+    }
 
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {

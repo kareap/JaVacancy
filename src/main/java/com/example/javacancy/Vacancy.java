@@ -1,5 +1,8 @@
 package com.example.javacancy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Vacancy {
 
     private String jobTitle;
@@ -9,6 +12,7 @@ public class Vacancy {
     private Integer salary;
     private String jobDescription;
     private String jobId;
+    private List<Application> applicants;
 
     public Vacancy(String jobTitle, String companyName, Location location, Experience experience, Integer salary, String jobDescription, String jobId) {
         this.jobTitle = jobTitle;
@@ -18,6 +22,7 @@ public class Vacancy {
         this.salary = salary;
         this.jobDescription = jobDescription;
         this.jobId = jobId; // Add random number
+        applicants = new ArrayList<>();
     }
 
     public String getJobTitle() {

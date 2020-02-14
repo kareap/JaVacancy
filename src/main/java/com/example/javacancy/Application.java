@@ -6,13 +6,15 @@ public class Application {
     String email;
     String phoneNumber;
     String applicationText;
+    String applicationId;
 
-    public Application(String firstName, String lastName, String email, String phoneNumber, String applicationText) {
+    public Application(String firstName, String lastName, String email, String phoneNumber, String applicationText, String applicationId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.applicationText = applicationText;
+        this.applicationId = applicationId;
     }
 
     public String getFirstName() {

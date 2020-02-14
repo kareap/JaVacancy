@@ -11,7 +11,7 @@
     <input required type="text" name="company" th:field="*{companyName}" placeholder="Company Name">
     <input required type="number" name="salary" th:field="*{salary}" placeholder="Salary">
 
-    <select required>
+    <select required name="experience">
         <option value="" selected disabled hidden>Experience Level</option>
         <option th:each="experience : ${T(com.example.javacancy.Experience).values()}"
                 th:value="${experience}"
@@ -19,7 +19,7 @@
         </option>
     </select>
 
-    <select required>
+    <select required name="location">
         <option value="" selected disabled hidden>Location</option>
         <option th:each="location : ${T(com.example.javacancy.Location).values()}"
                 th:value="${location}"
