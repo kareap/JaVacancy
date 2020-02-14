@@ -52,15 +52,8 @@ public class JavacancyApplication {
 
     @PostMapping("/")
     public String postIndex(Model m, @RequestParam(required = false) String searchTerm) {
-
-        if(searchTerm != null){
-            List<Vacancy> searchList = vacancySearch(searchTerm, vacancyList);
-            m.addAttribute("vacancyList", searchList);
-        } else {
-            m.addAttribute("vacancyList", vacancyList);
-        }
-
-        return "index";
+        
+        return "redirect:/?searchTerm=" + searchTerm;
     }
 
     @GetMapping("/experience")
