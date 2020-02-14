@@ -25,11 +25,10 @@ public class JavacancyApplication {
                 "Working experience in Servers like Tomcat Apache, WebLogic, JBoss.\n" +
                 "JSON/XML : request/response understanding.\n" +
                 "GIT or repository management.", "15240");
-        Vacancy job2 = new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently.","14265");
+        Vacancy job2 = new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently.", "14265");
         vacancyList.add(job1);
         vacancyList.add(job2);
     }
-
 
 
     public static void main(String[] args) {
@@ -38,12 +37,22 @@ public class JavacancyApplication {
 
 
     @GetMapping("/")
-    public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
+    public String getIndex(Model m, @RequestParam(required = false, defaultValue = "Search for vacancies") String searchTerm, @ModelAttribute Search searchObject) {
         m.addAttribute("search", searchObject);
+        m.addAttribute("searchBar", searchTerm);
+        List<Vacancy> searchList = vacancyList;
 
-        if(searchTerm != null){
-            List<Vacancy> searchList = vacancySearch(searchTerm, vacancyList);
+        if (searchTerm != null) {
+
+            String[] searchTermArray = searchTerm.split(" ");
+            for (String searchText : searchTermArray) {
+                searchList = vacancySearch(searchText, searchList);
+            }
+
+            // Add searchlist to model
             m.addAttribute("vacancyList", searchList);
+
+        // Add all vacancies to model if not search
         } else {
             m.addAttribute("vacancyList", vacancyList);
         }
@@ -59,21 +68,21 @@ public class JavacancyApplication {
 
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m) {
-        List <Vacancy> experienceList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size() ; i++) {
+        List<Vacancy> experienceList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size(); i++) {
             if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
                 experienceList.add(vacancyList.get(i));
             }
         }
         m.addAttribute("vacancyList", experienceList);
-        
+
         return "index";
     }
 
     @GetMapping("/location")
     public String getLocation(@RequestParam String location, Model m) {
-        List <Vacancy> locationList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size() ; i++) {
+        List<Vacancy> locationList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size(); i++) {
             if (vacancyList.get(i).getLocation().toString().equals(location)) {
                 locationList.add(vacancyList.get(i));
             }
@@ -82,14 +91,15 @@ public class JavacancyApplication {
 
         return "index";
     }
+
     @GetMapping("/salary")
     public String getSalaryRange1(@RequestParam String salaryRange, Model m) {
         Integer startNumber = Integer.parseInt(salaryRange.substring(0, 5));
         Integer endNumber = Integer.parseInt(salaryRange.substring(7, 13));
         System.out.println(startNumber);
 
-        List <Vacancy> salaryList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size() ; i++) {
+        List<Vacancy> salaryList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size(); i++) {
             if (vacancyList.get(i).getSalary() > startNumber && vacancyList.get(i).getSalary() < endNumber) {
                 salaryList.add(vacancyList.get(i));
             }
@@ -103,8 +113,8 @@ public class JavacancyApplication {
     public String getVacancy(Model m, @PathVariable(required = true) String jobId) {
         Vacancy currentJob = null;
 
-        for(Vacancy v : vacancyList){
-            if(v.getJobId().equals(jobId)){
+        for (Vacancy v : vacancyList) {
+            if (v.getJobId().equals(jobId)) {
                 currentJob = v;
             }
         }
@@ -115,14 +125,14 @@ public class JavacancyApplication {
         return "jobPage";
     }
 
-    @GetMapping ("/add")
-    public String addVacancy (@ModelAttribute Vacancy vacancy, Model m) {
+    @GetMapping("/add")
+    public String addVacancy(@ModelAttribute Vacancy vacancy, Model m) {
         m.addAttribute("vacancy", vacancy);
         return "addVacancy";
     }
 
     @PostMapping("/add")
-    public String addVacancy (@ModelAttribute Vacancy vacancy) {
+    public String addVacancy(@ModelAttribute Vacancy vacancy) {
         String randomId = String.valueOf((int) (Math.random() * 500000));
         Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription(), randomId);
         vacancyList.add(newVacancy);
@@ -131,19 +141,19 @@ public class JavacancyApplication {
     }
 
     // Search in title and job description
-    public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list){
+    public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {
         List<Vacancy> newList = new ArrayList<>();
         searchTerm = searchTerm.toLowerCase();
 
         // Looping over each job in the list
-        for(Vacancy vacancy : list){
+        for (Vacancy vacancy : list) {
 
             // If search term is in job title
-            if(vacancy.getJobTitle().toLowerCase().contains(searchTerm)){
+            if (vacancy.getJobTitle().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
 
-            // If search term is in job description
-            } else if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)){
+                // If search term is in job description
+            } else if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
             }
         }
