@@ -82,6 +82,22 @@ public class JavacancyApplication {
 
         return "index";
     }
+    @GetMapping("/salary")
+    public String getSalaryRange1(@RequestParam String salaryRange, Model m) {
+        Integer startNumber = Integer.parseInt(salaryRange.substring(0, 5));
+        Integer endNumber = Integer.parseInt(salaryRange.substring(7, 13));
+        System.out.println(startNumber);
+
+        List <Vacancy> salaryList = new ArrayList<>();
+        for (int i = 0; i < vacancyList.size() ; i++) {
+            if (vacancyList.get(i).getSalary() > startNumber && vacancyList.get(i).getSalary() < endNumber) {
+                salaryList.add(vacancyList.get(i));
+            }
+        }
+        m.addAttribute("vacancyList", salaryList);
+
+        return "index";
+    }
 
     @GetMapping("/vacancy/{jobId}")
     public String getVacancy(Model m, @PathVariable(required = true) String jobId) {
