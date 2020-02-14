@@ -37,7 +37,7 @@ public class JavacancyApplication {
 
 
     @GetMapping("/")
-    public String getIndex(Model m, @RequestParam(required = false, defaultValue = "Search for vacancies") String searchTerm, @ModelAttribute Search searchObject) {
+    public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
         List<Vacancy> searchList = vacancyList;
@@ -139,6 +139,19 @@ public class JavacancyApplication {
 
         return "redirect:/";
     }
+    @GetMapping("/application")
+    public String applicaton(@ModelAttribute Application application, Model m) {
+        m.addAttribute("application", application);
+        return "application";
+    }
+
+//    @PostMapping "/success"
+//    public
+
+//    @GetMapping("/success")
+//    public String sentApplication() {
+//        return "sentApplication";
+//    }
 
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {

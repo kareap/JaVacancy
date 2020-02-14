@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link type="text/css" rel="stylesheet" href="Style.css">
+</head>
+<body>
+<form action="/application" method="POST" th:object="${application}">
+    <input required type="text" name="firstName" th:field="*{firstName}" placeholder="First Name" autofocus>
+    <input required type="text" name="lastName" th:field="*{lastName}" placeholder="Last Name">
+    <input required type="text" name="email" th:field="*{email}" placeholder="Email">
+    <input required type="text" name="phoneNumber" th:field="*{phoneNumber}" placeholder="Phone Number">
+    <textarea required name="applicationText" id="" cols="30" rows="10" th:field="*{applicationText}" placeholder="Tell us why you are perfect for this job..."></textarea>
+    <input type="submit" value="Apply">
+</form>
+<a href="/">Cancel</a>
+</body>
+</html>
