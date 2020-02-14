@@ -12,16 +12,21 @@
 </header>
 
 <body>
-    <a href="/" >All Vacancies</a>
-    <br>
-    
+
+
 
     <br>
+
+    <!--    Search job vacancies -->
+    <div id="search">
     <form th:action="'/'" method="post" th:object="${search}">
-        <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies">
+        <input type="text" name="title" th:field="*{searchText}" th:placeholder="${searchBar}">
         <input type="submit" value="Search">
     </form>
+    </div>
+    <br>
 
+    <a href="/" >All Vacancies</a>
 
     <a href="/location?location=Oslo" >Oslo</a>
     <a href="/location?location=Bergen" >Bergen</a>
@@ -34,15 +39,20 @@
     <a href="/experience?experienceLevel=Senior" >Senior</a>
     <br>
     <a href="/add" >Add vacancy</a>
+
     <hr>
-    <div class="flex-jobs">
+
+<!--    Print job vacancies -->
     <div th:each="job : ${vacancyList}">
         <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
         <p th:text="${job.getCompanyName()}"></p>
         <hr>
     </div>
-</div>
+
+
 </body>
+
+
 
 <footer>
     <div>Copyright © 2020 - jaVacancy | info@jaVacancy.com | 23009070 </div>
