@@ -13,6 +13,7 @@
     <p th:text="'Experience: ' + ${job.getExperience()}"></p>
     <p th:text="'Salary: ' + ${job.getSalary()}"></p>
     <p th:text="${job.getJobDescription()}"></p>
+    <a th:href="'/application/' + ${jobId}" >Apply</a>
     <a href="/">Back To Homepage</a>
 </body>
 </html>

@@ -143,9 +143,16 @@ public class JavacancyApplication {
 
         return "redirect:/";
     }
-    @GetMapping("/application")
-    public String applicaton(@ModelAttribute Application application, Model m) {
+    @GetMapping("/application/{jobId}")
+    public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
         m.addAttribute("application", application);
+
+        for (int i = 0; i < vacancyList.size(); i++) {
+            if (vacancyList.get(i).getJobId().equals(jobId)) {
+                m.addAttribute("vacancy", vacancyList.get(i));
+            }
+        }
+
         return "application";
     }
 

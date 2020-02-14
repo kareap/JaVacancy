@@ -6,6 +6,15 @@
     <link type="text/css" rel="stylesheet" href="Style.css">
 </head>
 <body>
+<h1>Application Form</h1>
+
+<div th:object="${vacancy}">
+    <h3 th:text="'Job Title: ' + *{jobTitle}"></h3>
+    <p th:text="'Company: ' + *{companyName}"></p>
+    <hr>
+</div>
+
+
 <form action="/application" method="POST" th:object="${application}">
     <input required type="text" name="firstName" th:field="*{firstName}" placeholder="First Name" autofocus>
     <input required type="text" name="lastName" th:field="*{lastName}" placeholder="Last Name">
