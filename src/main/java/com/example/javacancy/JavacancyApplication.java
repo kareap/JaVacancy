@@ -145,13 +145,17 @@ public class JavacancyApplication {
         return "application";
     }
 
-//    @PostMapping "/success"
-//    public
+    @PostMapping ("/success")
+    public String sentApplication (@ModelAttribute Vacancy vacancy) {
+        
+        return "redirect:/";
+    }
 
-//    @GetMapping("/success")
-//    public String sentApplication() {
-//        return "sentApplication";
-//    }
+
+    @GetMapping("/success")
+    public String sentApplication() {
+        return "sentApplication";
+    }
 
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {
