@@ -7,14 +7,12 @@
 </head>
 
 <header>
+    <img src="/background.jpg" alt="" class="bg-img">
     <h1> jaVacancy </h1>
 
 </header>
 
 <body>
-
-
-
     <br>
 
     <!--    Search job vacancies -->
@@ -32,6 +30,11 @@
     <a href="/location?location=Bergen" >Bergen</a>
     <a href="/location?location=Trondheim" >Trondheim</a>
     <a href="/location?location=Stavanger" >Stavanger</a>
+    <br>
+    <a href="/salary?salaryRange=0-499000" >0-500k</a>
+    <a href="/salary?salaryRange=500000-749000" >500k-749k</a>
+    <a href="/salary?salaryRange=749000-899000" >750k-899k</a>
+    <a href="/salary?salaryRange=900000-4000000" >900k+</a>
 
     <br>
     <a href="/experience?experienceLevel=Entry" >Entry</a>
@@ -42,8 +45,11 @@
 
     <hr>
 
-    <div th:if="${searchBar != null}">
+    <div th:if="${searchBar != null && vacancyList.size() != 0}">
         <p th:text="'Results for: ' + ${searchBar}"></p>
+    </div>
+    <div th:if="${vacancyList.size() == 0}">
+        <p th:text="'Whoopsie! There are no jobs that match your search...'"></p>
     </div>
 
 <!--    Print job vacancies -->

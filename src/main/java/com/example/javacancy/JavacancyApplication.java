@@ -69,7 +69,7 @@ public class JavacancyApplication {
     }
 
     @GetMapping("/experience")
-    public String getExperience(@RequestParam String experienceLevel, Model m) {
+    public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
         List<Vacancy> experienceList = new ArrayList<>();
         for (int i = 0; i < vacancyList.size(); i++) {
             if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
@@ -77,12 +77,13 @@ public class JavacancyApplication {
             }
         }
         m.addAttribute("vacancyList", experienceList);
+        m.addAttribute("search", searchObject);
 
         return "index";
     }
 
     @GetMapping("/location")
-    public String getLocation(@RequestParam String location, Model m) {
+    public String getLocation(@RequestParam String location, Model m, @ModelAttribute Search searchObject) {
         List<Vacancy> locationList = new ArrayList<>();
         for (int i = 0; i < vacancyList.size(); i++) {
             if (vacancyList.get(i).getLocation().toString().equals(location)) {
@@ -90,15 +91,16 @@ public class JavacancyApplication {
             }
         }
         m.addAttribute("vacancyList", locationList);
+        m.addAttribute("search", searchObject);
 
         return "index";
     }
 
     @GetMapping("/salary")
-    public String getSalaryRange1(@RequestParam String salaryRange, Model m) {
+    public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject) {
         int index = salaryRange.indexOf('-');
         Integer startNumber = Integer.parseInt(salaryRange.substring(0, index));
-        Integer endNumber = Integer.parseInt(salaryRange.substring(index));
+        Integer endNumber = Integer.parseInt(salaryRange.substring(index+1));
 
         List<Vacancy> salaryList = new ArrayList<>();
         for (int i = 0; i < vacancyList.size(); i++) {
@@ -107,6 +109,7 @@ public class JavacancyApplication {
             }
         }
         m.addAttribute("vacancyList", salaryList);
+        m.addAttribute("search", searchObject);
 
         return "index";
     }
