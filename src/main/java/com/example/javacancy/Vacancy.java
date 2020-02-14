@@ -6,18 +6,18 @@ public class Vacancy {
     private String companyName;
     private Location location;
     private Experience experience;
-    private int salary;
+    private Integer salary;
     private String jobDescription;
     private String jobId;
 
-    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, int salary, String jobDescription, String jobId) {
+    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, Integer salary, String jobDescription, String jobId) {
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.location = location;
         this.experience = experience;
         this.salary = salary;
         this.jobDescription = jobDescription;
-        this.jobId = jobId;
+        this.jobId = jobId; // Add random number
     }
 
     public String getJobTitle() {
@@ -36,7 +36,7 @@ public class Vacancy {
         return experience;
     }
 
-    public int getSalary() {
+    public Integer getSalary() {
         return salary;
     }
 
