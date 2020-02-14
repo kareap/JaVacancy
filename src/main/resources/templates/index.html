@@ -15,21 +15,12 @@
     <a href="/" >All Vacancies</a>
     <br>
 
+    <a href=/location?location=Bergen">Bergen</a>
+    <a href="/location?location=Trondheim">Trondheim</a>
+    <a href="/location?location=Stavanger">Stavanger</a>
 
-    <select>
-        <option value="" selected disabled hidden>Location</option>
-
-    <option href="/location?location=Bergen" >Bergen</option>
-    <option href="/location?location=Trondheim" >Trondheim</option>
-    <option href="/location?location=Stavanger" >Stavanger</option>
-
-        </select>
 
     <br>
-    <form th:action="'/'" method="post">
-        <input type="text" name="title" th:field="{search}" th:placeholder="Search for vacancies">
-        <input type="submit" value="Search">
-    </form>
 
     <a href="/location?location=Oslo" >Oslo</a>
     <a href="/location?location=Bergen" >Bergen</a>
