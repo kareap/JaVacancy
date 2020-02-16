@@ -2,6 +2,7 @@ package com.example.javacancy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Vacancy {
 
@@ -14,14 +15,19 @@ public class Vacancy {
     private String jobId;
     private List<Application> applicants;
 
-    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, Integer salary, String jobDescription, String jobId) {
+    public Vacancy(String jobTitle, String companyName, Location location, Experience experience, Integer salary, String jobDescription) {
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.location = location;
         this.experience = experience;
         this.salary = salary;
         this.jobDescription = jobDescription;
-        this.jobId = jobId; // Add random number
+
+        // Add random job ID
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        String randomId = String.valueOf(random.nextInt(500000,999999));
+        this.jobId = randomId;
+
         applicants = new ArrayList<>();
     }
 
