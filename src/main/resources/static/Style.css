@@ -6,58 +6,201 @@ Black: #000523
 
 */
 
-html {
-    background-color: #000523;
+body {
+    margin: 0px;
 }
 
-img {
+h1 {
+    color: #5283A2;
+}
+
+.logo {
     overflow: hidden;
-}
-
-.bg-img{
-    width: 100%;
-    background-size: cover;
-    border-radius: 0px;
-    height: 100vh;
-}
-
-header {
-    background-color: #000523;
-    color: black;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-header img {
     width: 100vw;
 }
 
-header h1 {
-    color: white;
-    margin-bottom: 30px;
-    padding-bottom: 50px;
+.menuDivs {
+    margin-bottom: 16px;
+}
+
+input {
+    padding: 8px;
+    margin-bottom: 5px;
+}
+
+#filterButtons {
+    margin-top: 10px;
     text-align: center;
+    font-size: 11px;
+}
+
+#filterButtons a {
+    margin: 5px;
+    padding: 5px;
+    background-color: #5283A2;
+    color: white;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.submittButton {
+    margin: 10px;
+    padding: 10px;
+    background-color: #5283A2;
+    color: white;
+    border-radius: 3px;
+    text-decoration: none;
+    border: none;
 }
 
 
-body {
+.content {
     background-color: white;
+    margin-top: 15px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 5px;
+    width: 700px;
 }
 
-#search {
-    
+#searchDiv {
+    width: 50%;
+    margin: auto;
+}
+
+#searchForm {
+    margin: auto;
+    display: table;
+}
+
+#searchTextField {
+    width: 250px;
+}
+
+.searchResultMenu {
+    text-align: center;
+    margin-top: 25px;
+}
+
+#addVacancyForm {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#addVacancyForm h1 {
+    text-align: center;
+}
+
+#addVacancyForm input, textarea {
+    width: 250px;
+    display: block;
+    padding: 9px;
+    margin-bottom: 5px;
+}
+
+#addVacancyForm select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 9px;
+    width: 270px;
+    display: block;
+    border-radius: 0px;
+    margin-bottom: 5px;
+    border-color: rgb(238, 238, 238);
+    background-color: white;
+    border-width: 2px;
+}
+
+#addVacancyForm #addVacancyPublishButton {
+    width: 48%;
+    background-color: #5283A2;
+    display: inline-block;
+    margin-right: 5px;
+    color: white;
+}
+
+#addVacancyForm #addVacancyCancelButton {
+    font-size: 13px;
+    color: #5283A2;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    width: 48%;
+}
+
+#applyBackButton, #applyButton {
+    font-size: 13px;
+    color: #5283A2;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    width: 22%;
+}
+
+#applyButton {
+    background-color: #5283A2;
+    padding: 9px;
+    color: white;
+}
+
+#applicationForm {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#applicationForm input, textarea {
+    width: 250px;
+    display: block;
+    padding: 9px;
+    margin-bottom: 5px;
+}
+
+#applicationForm #applicationSubmittButton {
+    width: 48%;
+    background-color: #5283A2;
+    display: inline-block;
+    margin-right: 5px;
+    color: white;
+}
+
+#applicationForm #applicationCancelButton {
+    font-size: 13px;
+    color: #5283A2;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    width: 48%;
+}
+
+#applicationHeader {
+    text-align: center;
+}
+
+#successBackButton {
+    width: 22%;
+    background-color: #5283A2;
+    display: inline-block;
+    margin-right: 5px;
+    color: white;
+    padding: 9px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 13px;
+}
+
+.successPage {
+    height: 55vh;
 }
 
 footer {
-    background-color: #000523;
     color: black;
     padding: 25px;
     text-align: center;
     line-height: 30px;
-
+    margin-top: 20px;
 }
 
 #footerLogo {

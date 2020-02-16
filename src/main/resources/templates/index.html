@@ -5,67 +5,64 @@
     <title>JaVacancy</title>
     <link type="text/css" rel="stylesheet" href="Style.css">
 </head>
-
-<header>
-    <h1> jaVacancy </h1>
-
-</header>
-
 <body>
-    <br>
+    <div th:replace="templates :: logo"></div>
 
-    <!--    Search job vacancies -->
-    <div id="search">
-    <form th:action="'/'" method="post" th:object="${search}">
-        <input type="text" name="title" th:field="*{searchText}" placeholder="Search here">
-        <input type="submit" value="Search">
-    </form>
-    </div>
-    <br>
+    <div class="content">
+        <div id="searchDiv">
+            <form th:action="'/'" method="post" th:object="${search}" id="searchForm">
+                <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies" id="searchTextField" autofocus>
+                <input type="submit" value="Search" class="submittButton">
+            </form>
+        </div>
 
-    <a href="/" >All Vacancies</a>
+        <div id="filterButtons">
+            <div class="menuDivs location">
+                <a href="/location?location=Oslo" >Oslo</a>
+                <a href="/location?location=Bergen" >Bergen</a>
+                <a href="/location?location=Trondheim" >Trondheim</a>
+                <a href="/location?location=Stavanger" >Stavanger</a>
+            </div>
 
-    <a href="/location?location=Oslo" >Oslo</a>
-    <a href="/location?location=Bergen" >Bergen</a>
-    <a href="/location?location=Trondheim" >Trondheim</a>
-    <a href="/location?location=Stavanger" >Stavanger</a>
-    <br>
-    <a href="/salary?salaryRange=0-499000" >0-500k</a>
-    <a href="/salary?salaryRange=500000-749000" >500k-749k</a>
-    <a href="/salary?salaryRange=749000-899000" >750k-899k</a>
-    <a href="/salary?salaryRange=900000-4000000" >900k+</a>
+            <div class="menuDivs salary">
+                <a href="/salary?salaryRange=0-499000" >0-500k</a>
+                <a href="/salary?salaryRange=500000-749000" >500k-749k</a>
+                <a href="/salary?salaryRange=749000-899000" >750k-899k</a>
+                <a href="/salary?salaryRange=900000-4000000" >900k+</a>
+            </div>
 
-    <br>
-    <a href="/experience?experienceLevel=Entry" >Entry</a>
-    <a href="/experience?experienceLevel=Mid" >Mid</a>
-    <a href="/experience?experienceLevel=Senior" >Senior</a>
-    <br>
-    <a href="/add" >Add vacancy</a>
+            <div class="menuDivs experience">
+                <a href="/experience?experienceLevel=Entry" >Entry</a>
+                <a href="/experience?experienceLevel=Mid" >Mid</a>
+                <a href="/experience?experienceLevel=Senior" >Senior</a>
+            </div>
+        </div>
 
-    <hr>
-
-    <div th:if="${searchBar != null && vacancyList.size() != 0}">
-        <p th:text="'Results for: ' + ${searchBar}"></p>
-    </div>
-    <div th:if="${vacancyList.size() == 0}">
-        <p th:text="'Whoopsie! There are no jobs that match your search...'"></p>
-    </div>
-
-<!--    Print job vacancies -->
-    <div th:each="job : ${vacancyList}">
-        <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
-        <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
-        <p th:text="${job.getCompanyName()}"></p>
+        <div class="searchResultMenu">
+            <div th:if="${searchBar != null && vacancyList.size() != 0}">
+                <p th:text="${vacancyList.size()} + ' results for: ' + ${searchBar}"></p>
+                <a href="/" >Remove filter</a>
+            </div>
+            <div th:if="${vacancyList.size() == 0}">
+                <p th:text="'Whoopsie! There are no jobs that match your search...️ 🤷‍♂️'"️></p>
+                <a href="/">Remove filter</a>
+            </div>
+        </div>
         <hr>
+
+        <!--    Print job vacancies -->
+        <div th:each="job : ${vacancyList}">
+            <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
+            <p th:text="${job.getCompanyName()}"></p>
+            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
+            <hr>
+        </div>
+
+        <div class="menuDivs addVacancy">
+            <a href="/add" >Add vacancy</a>
+        </div>
     </div>
 
-
+    <div th:replace="templates :: footer"></div>
 </body>
-
-
-
-<footer>
-    <div>Copyright © 2020 - jaVacancy | info@jaVacancy.com | 23009070 </div>
-    <div id="footerLogo"> jaVacancy </div>
-</footer>
 </html>

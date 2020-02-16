@@ -116,10 +116,13 @@ public class JavacancyApplication {
             }
         }
 
-        m.addAttribute("vacancyList", vacancyList);
-        m.addAttribute("job", currentJob);
-
-        return "jobPage";
+        if(currentJob == null){
+            return "redirect:/";
+        } else {
+            m.addAttribute("vacancyList", vacancyList);
+            m.addAttribute("job", currentJob);
+            return "jobPage";
+        }
     }
 
     @GetMapping("/add")
@@ -137,15 +140,24 @@ public class JavacancyApplication {
     }
     @GetMapping("/application/{jobId}")
     public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
-        m.addAttribute("application", application);
 
-        for (int i = 0; i < vacancyList.size(); i++) {
-            if (vacancyList.get(i).getJobId().equals(jobId)) {
-                m.addAttribute("vacancy", vacancyList.get(i));
+        Vacancy currentJob = null;
+
+        for (Vacancy v : vacancyList) {
+            if (v.getJobId().equals(jobId)) {
+                currentJob = v;
             }
         }
 
-        return "application";
+        if(currentJob == null){
+            return "redirect:/";
+        } else {
+
+            m.addAttribute("application", application);
+            m.addAttribute("vacancy", currentJob);
+
+            return "application";
+        }
     }
 
     @PostMapping("/application")

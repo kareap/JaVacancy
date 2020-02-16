@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Job page</title>
-    <link type="text/css" rel="stylesheet" href="Style.css">
-
+    <link type="text/css" rel="stylesheet" href="/Style.css">
 </head>
 <body>
-    <h3 th:text="${job.getJobTitle()}"></h3>
-    <p th:text="'Company: ' + ${job.getCompanyName()}"></p>
-    <p th:text="'Location: ' + ${job.getLocation()}"></p>
-    <p th:text="'Experience: ' + ${job.getExperience()}"></p>
-    <p th:text="'Salary: ' + ${job.getSalary()}"></p>
-    <p th:text="${job.getJobDescription()}"></p>
-    <a th:href="'/application/' + ${jobId}" >Apply</a>
-    <a href="/">Back To Homepage</a>
+    <div th:replace="templates :: logo"></div>
+    <div class="content">
+        <h3 th:text="${job.getJobTitle()}"></h3>
+        <p th:text="'Company: ' + ${job.getCompanyName()}"></p>
+        <p th:text="'Location: ' + ${job.getLocation()}"></p>
+        <p th:text="'Experience: ' + ${job.getExperience()}"></p>
+        <p th:text="'Salary: ' + ${job.getSalary()}"></p>
+        <p th:text="${job.getJobDescription()}"></p>
+        <a th:href="'/application/' + ${jobId}" id="applyButton">Apply</a>
+        <a href="/" id="applyBackButton">Back To Homepage</a>
+    </div>
+    <div th:replace="templates :: footer"></div>
 </body>
 </html>
