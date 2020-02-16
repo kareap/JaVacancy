@@ -19,8 +19,7 @@ public class Application {
 
         // Add random application ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        String randomId = String.valueOf(random.nextInt(100000,499999));
-        this.applicationId = randomId;
+        this.applicationId = String.valueOf(random.nextInt(100000,499999));
 
     }
 

@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -20,27 +21,30 @@ public class JavacancyApplication {
         populateDatabase();
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(JavacancyApplication.class, args);
     }
-
 
     @GetMapping("/")
     public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
         List<Vacancy> searchList = vacancyList;
+        List<Vacancy> searchListWithRelevanceScore = new ArrayList<>();
 
-        if (searchTerm != null) {
+        if (searchTerm != null && searchTerm.length() > 1) {
+            resetRelevanceScore();
 
             String[] searchTermArray = searchTerm.split(" ");
             for (String searchText : searchTermArray) {
                 searchList = vacancySearch(searchText, searchList);
+                searchListWithRelevanceScore = findSearchRelevanceScore(searchText, searchList);
             }
 
+            Collections.sort(searchListWithRelevanceScore);
+
             // Add searchlist to model
-            m.addAttribute("vacancyList", searchList);
+            m.addAttribute("vacancyList", searchListWithRelevanceScore);
 
         // Add all vacancies to model if not search
         } else {
@@ -157,6 +161,7 @@ public class JavacancyApplication {
         return "sentApplication";
     }
 
+
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {
         List<Vacancy> newList = new ArrayList<>();
@@ -172,10 +177,67 @@ public class JavacancyApplication {
                 // If search term is in job description
             } else if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
+
+            } else if (vacancy.getCompanyName().toLowerCase().contains(searchTerm)) {
+                newList.add(vacancy);
+
+            } else if (vacancy.getLocation().toString().toLowerCase().contains(searchTerm)) {
+                newList.add(vacancy);
+
+            } else if (vacancy.getExperience().toString().toLowerCase().contains(searchTerm)) {
+                newList.add(vacancy);
             }
         }
 
         return newList;
+    }
+
+    // Find search relevance score
+    public List<Vacancy> findSearchRelevanceScore(String searchTerm, List<Vacancy> list) {
+        searchTerm = searchTerm.toLowerCase();
+
+        // Looping over each job in the list
+        for (Vacancy vacancy : list) {
+            int newScore;
+
+            // If search term is in job title
+            if (vacancy.getJobTitle().toLowerCase().contains(searchTerm)) {
+                newScore = vacancy.getSearchRelevance() + 2;
+                vacancy.setSearchRelevance(newScore);
+            }
+
+            // If search term is in job description
+            if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)) {
+                newScore = vacancy.getSearchRelevance() + 1;
+                vacancy.setSearchRelevance(newScore);
+            }
+
+            // If search term is in company name
+            if (vacancy.getCompanyName().toLowerCase().contains(searchTerm)) {
+                newScore = vacancy.getSearchRelevance() + 5;
+                vacancy.setSearchRelevance(newScore);
+            }
+
+            // If search term is in location
+            if (vacancy.getLocation().toString().toLowerCase().contains(searchTerm)) {
+                newScore = vacancy.getSearchRelevance() + 5;
+                vacancy.setSearchRelevance(newScore);
+            }
+
+            // If search term is in location
+            if (vacancy.getExperience().toString().toLowerCase().contains(searchTerm)) {
+                newScore = vacancy.getSearchRelevance() + 5;
+                vacancy.setSearchRelevance(newScore);
+            }
+        }
+
+        return list;
+    }
+
+    public void resetRelevanceScore(){
+        for(Vacancy v : vacancyList){
+            v.setSearchRelevance(0);
+        }
     }
 
 

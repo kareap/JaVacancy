@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Vacancy {
+public class Vacancy implements Comparable<Vacancy> {
 
     private String jobTitle;
     private String companyName;
@@ -14,6 +14,7 @@ public class Vacancy {
     private String jobDescription;
     private String jobId;
     private List<Application> applicants;
+    private int searchRelevance;
 
     public Vacancy(String jobTitle, String companyName, Location location, Experience experience, Integer salary, String jobDescription) {
         this.jobTitle = jobTitle;
@@ -22,11 +23,11 @@ public class Vacancy {
         this.experience = experience;
         this.salary = salary;
         this.jobDescription = jobDescription;
+        this.searchRelevance = 0;
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        String randomId = String.valueOf(random.nextInt(500000,999999));
-        this.jobId = randomId;
+        this.jobId = String.valueOf(random.nextInt(500000,999999));
 
         applicants = new ArrayList<>();
     }
@@ -57,5 +58,18 @@ public class Vacancy {
 
     public String getJobId(){
         return jobId;
+    }
+
+    public void setSearchRelevance(int searchRelevance) {
+        this.searchRelevance = searchRelevance;
+    }
+
+    public int getSearchRelevance() {
+        return searchRelevance;
+    }
+
+    @Override
+    public int compareTo(Vacancy v) {
+        return Integer.compare(v.getSearchRelevance(), searchRelevance);
     }
 }
