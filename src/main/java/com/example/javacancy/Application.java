@@ -20,7 +20,6 @@ public class Application {
         // Add random application ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
         this.applicationId = String.valueOf(random.nextInt(100000,499999));
-
     }
 
     public String getFirstName() {

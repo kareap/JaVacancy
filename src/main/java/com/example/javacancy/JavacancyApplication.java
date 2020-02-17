@@ -39,66 +39,56 @@ public class JavacancyApplication {
 
     @GetMapping("/")
     public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject, HttpSession s) {
-        filteredList = vacancyList;
-        isFilterOn = false;
-        isFilteredByExperience = false;
-        isFilteredByLocation = false;
-        isFilteredBySalary = false;
-        lastSalarySearch = null;
-        lastExperienceSearch = null;
-        lastLocationSearch = null;
+        // Resett search results
+        resetFilters();
+        resetRelevanceScore();
 
-        m.addAttribute("search", searchObject);
-        m.addAttribute("searchBar", searchTerm);
+        // Prepare for new search results
         List<Vacancy> searchList = vacancyList;
         List<Vacancy> searchListWithRelevanceScore = new ArrayList<>();
 
+        // If search
         if (searchTerm != null && searchTerm.length() > 1) {
-            resetRelevanceScore();
 
+            // Iterate over each search term
             String[] searchTermArray = searchTerm.split(" ");
             for (String searchText : searchTermArray) {
                 searchList = vacancySearch(searchText, searchList);
                 searchListWithRelevanceScore = findSearchRelevanceScore(searchText, searchList);
             }
 
+            // Sort search results based on relevance score
             Collections.sort(searchListWithRelevanceScore);
 
-            // Add searchlist to model
+            // Add searchresults to model and session
             m.addAttribute("vacancyList", searchListWithRelevanceScore);
             s.setAttribute("currentList" , searchListWithRelevanceScore);
 
-            // Add all vacancies to model if not search
+        // Add all vacancies to model if not search
         } else {
             m.addAttribute("vacancyList", vacancyList);
             s.setAttribute("currentList" , vacancyList);
         }
 
+        m.addAttribute("search", searchObject);
+        m.addAttribute("searchBar", searchTerm);
         return "index";
     }
 
     @PostMapping("/")
     public String postIndex(Model m, @ModelAttribute Search search) {
-
         return "redirect:/?searchTerm=" + search.getSearchText();
     }
 
 
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject, HttpSession s) {
-
         isFilteredByExperience = true;
         lastExperienceSearch = experienceLevel;
         List<Vacancy> experienceList = filterVacancies();
-
         m.addAttribute("vacancyList", experienceList);
         m.addAttribute("search", searchObject);
-        isFilterOn = true;
-        m.addAttribute("isFilterOn", isFilterOn);
-        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
-        m.addAttribute("lastLocationSearch", lastLocationSearch);
-        m.addAttribute("lastSalarySearch", lastSalarySearch);
-        s.setAttribute("currentList" , experienceList);
+        updateFiltersAndAddToModel(m);
 
         return "index";
     }
@@ -109,15 +99,10 @@ public class JavacancyApplication {
         isFilteredByLocation = true;
         lastLocationSearch = location;
         List<Vacancy> locationList = filterVacancies();
-
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
-        isFilterOn = true;
-        m.addAttribute("isFilterOn", isFilterOn);
-        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
-        m.addAttribute("lastLocationSearch", lastLocationSearch);
-        m.addAttribute("lastSalarySearch", lastSalarySearch);
         s.setAttribute("currentList" , locationList);
+        updateFiltersAndAddToModel(m);
 
         return "index";
     }
@@ -128,16 +113,10 @@ public class JavacancyApplication {
         isFilteredBySalary = true;
         lastSalarySearch = salaryRange;
         List<Vacancy> salaryList = filterVacancies();
-
-
+        s.setAttribute("currentList" , salaryList);
         m.addAttribute("vacancyList", salaryList);
         m.addAttribute("search", searchObject);
-        isFilterOn = true;
-        m.addAttribute("isFilterOn", isFilterOn);
-        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
-        m.addAttribute("lastLocationSearch", lastLocationSearch);
-        m.addAttribute("lastSalarySearch", lastSalarySearch);
-        s.setAttribute("currentList" , salaryList);
+        updateFiltersAndAddToModel(m);
 
         return "index";
     }
@@ -146,6 +125,7 @@ public class JavacancyApplication {
     public String getVacancy(Model m, @PathVariable(required = true) String jobId, HttpSession s) {
         Vacancy currentJob = null;
 
+        // Find current job
         for (Vacancy v : vacancyList) {
             if (v.getJobId().equals(jobId)) {
                 currentJob = v;
@@ -168,6 +148,7 @@ public class JavacancyApplication {
         return "addVacancy";
     }
 
+    // Add new vacancy
     @PostMapping("/add")
     public String addVacancy(@ModelAttribute Vacancy vacancy) {
         Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription());
@@ -178,9 +159,9 @@ public class JavacancyApplication {
 
     @GetMapping("/application/{jobId}")
     public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
-
         Vacancy currentJob = null;
 
+        // Find current job
         for (Vacancy v : vacancyList) {
             if (v.getJobId().equals(jobId)) {
                 currentJob = v;
@@ -190,10 +171,8 @@ public class JavacancyApplication {
         if (currentJob == null) {
             return "redirect:/";
         } else {
-
             m.addAttribute("application", application);
             m.addAttribute("vacancy", currentJob);
-
             return "application";
         }
     }
@@ -201,16 +180,13 @@ public class JavacancyApplication {
     @PostMapping("/application")
     public String sentApplication(@ModelAttribute Application application) {
         Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
-
         return "redirect:/success";
     }
-
 
     @GetMapping("/success")
     public String success() {
         return "sentApplication";
     }
-
 
     // Search in title and job description
     public List<Vacancy> vacancySearch(String searchTerm, List<Vacancy> list) {
@@ -228,12 +204,15 @@ public class JavacancyApplication {
             } else if (vacancy.getJobDescription().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
 
+                // If search term is in Company Name
             } else if (vacancy.getCompanyName().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
 
+                // If search term is in Location
             } else if (vacancy.getLocation().toString().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
 
+                // If search term is in Experience
             } else if (vacancy.getExperience().toString().toLowerCase().contains(searchTerm)) {
                 newList.add(vacancy);
             }
@@ -242,7 +221,7 @@ public class JavacancyApplication {
         return newList;
     }
 
-    // Find search relevance score
+    // Find relevance score for each search word
     public List<Vacancy> findSearchRelevanceScore(String searchTerm, List<Vacancy> list) {
         searchTerm = searchTerm.toLowerCase();
 
@@ -289,7 +268,6 @@ public class JavacancyApplication {
             v.setSearchRelevance(0);
         }
     }
-
 
     public void populateDatabase() {
         Vacancy job1 = new Vacancy("Junior Java Developer", "Microsoft", Location.Oslo, Experience.Entry, 463000, "Experience in applications development using Java Spring Framework with expertise on Core Java , J2EE, OOPS, Spring Boot, Spring MVC, REST , Hibernate, Javascipt. Should have mandatory experience in JSP, Servlets. Excellent experience in web UI like HTML, CSS, JavaScript, JQuery, AJAX, ReactJS etc. Web services like Restful and Soap. Databases : Oracle or MySQL or SQL Server with JDBC connections. Working experience in Servers like Tomcat Apache, WebLogic, JBoss. JSON/XML : request/response understanding. GIT or repository management.");
@@ -345,6 +323,7 @@ public class JavacancyApplication {
         List<Vacancy> currentList = vacancyList;
         List<Vacancy> newList = new ArrayList<>();
 
+        // Filter by location
         if (isFilteredByLocation) {
             for (int i = 0; i < currentList.size(); i++) {
                 if (currentList.get(i).getLocation().toString().equals(lastLocationSearch)) {
@@ -352,6 +331,8 @@ public class JavacancyApplication {
                 }
             }
         }
+
+        // Filter by salary
         if (isFilteredBySalary) {
 
             if (isFilteredByLocation) {
@@ -370,6 +351,7 @@ public class JavacancyApplication {
             }
         }
 
+        // Filter by experience
         if (isFilteredByExperience) {
 
             if (isFilteredByLocation || isFilteredBySalary) {
@@ -386,9 +368,30 @@ public class JavacancyApplication {
         return newList;
     }
 
+    // Dummy method for the tests
     public  int getVacancyLength() {
         int vacancyLength = vacancyList.size();
         return vacancyLength;
     }
 
+    // Reset filters, used on the front page
+    public void resetFilters(){
+        filteredList = vacancyList;
+        isFilterOn = false;
+        isFilteredByExperience = false;
+        isFilteredByLocation = false;
+        isFilteredBySalary = false;
+        lastSalarySearch = null;
+        lastExperienceSearch = null;
+        lastLocationSearch = null;
+    }
+
+    // Most used model attributes
+    public void updateFiltersAndAddToModel(Model m){
+        isFilterOn = true;
+        m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
+    }
 }
