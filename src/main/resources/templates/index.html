@@ -54,13 +54,15 @@
         </div>
         <hr>
 
+
+
         <!--    Print job vacancies -->
         <div th:each="job : ${vacancyList}">
-            <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
-            <p th:text="${job.getCompanyName()}"></p>
-            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
-            <hr>
-        </div>
+        <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
+        <p th:text="${job.getCompanyName()}"></p>
+        <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
+        <hr>
+    </div>
 
         <div class="menuDivs addVacancy">
             <a href="/add" >Add vacancy</a>
