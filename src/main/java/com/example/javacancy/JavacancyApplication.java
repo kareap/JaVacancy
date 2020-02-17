@@ -41,6 +41,9 @@ public class JavacancyApplication {
         isFilteredByExperience = false;
         isFilteredByLocation = false;
         isFilteredBySalary = false;
+        lastSalarySearch = null;
+        lastExperienceSearch = null;
+        lastLocationSearch = null;
 
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
@@ -105,6 +108,9 @@ public class JavacancyApplication {
         m.addAttribute("search", searchObject);
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
 
         return "index";
     }
@@ -121,6 +127,9 @@ public class JavacancyApplication {
         m.addAttribute("search", searchObject);
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
 
         return "index";
     }

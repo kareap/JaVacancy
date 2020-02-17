@@ -17,44 +17,26 @@
         </div>
 
         <div id="filterButtons">
-<!--            <div class="menuDivs location">-->
-<!--&lt;!&ndash;                <div th:if="${searchBar != null && vacancyList.size() != 0}">&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${vacancyList.size()} + ' results for: ' + ${searchBar}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/" >Remove filter</a>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Oslo" >Oslo</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Bergen" >Bergen</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Trondheim" >Trondheim</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Stavanger" >Stavanger</a>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;            <div class="menuDivs salary">&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=0-499999" >0-500k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=500000-749999" >500k-749k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=749000-899999" >750k-899k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=900000-4000000" >900k+</a>&ndash;&gt;-->
-<!--             </div>-->
-            <div>
-                <span th:each="location : ${T(com.example.javacancy.Location).values()}"  class="menuDivs location">
+            <div  class="menuDivs location">
+                <span th:each="location : ${T(com.example.javacancy.Location).values()}" >
                     <a  th:if="${location.toString() == lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${location.toString() != lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}"></a>
                 </span>
             </div>
 
-            <div>
-                <span th:each="salary : ${T(com.example.javacancy.Salary).values()}"  class="menuDivs salary">
+            <div  class="menuDivs salary">
+                <span th:each="salary : ${T(com.example.javacancy.Salary).values()}" >
                     <a  th:if="${salary.toString() == lastSalarySearch}" th:value="${salary}" th:text="${salary}" th:href="'/salary?salaryRange=' + ${salary}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${salary.toString() != lastSalarySearch}" th:value="${salary}" th:text="${salary}" th:href="'/salary?salaryRange=' + ${salary}"></a>
                 </span>
             </div>
 
-            <div>
-                <span th:each="experience : ${T(com.example.javacancy.Experience).values()}"  class="menuDivs experience">
+            <div  class="menuDivs experience">
+                <span th:each="experience : ${T(com.example.javacancy.Experience).values()}" >
                     <a  th:if="${experience.toString() == lastExperienceSearch}" th:value="${experience}" th:text="${experience}" th:href="'/experience?experienceLevel=' + ${experience}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${experience.toString() != lastExperienceSearch}" th:value="${experience}" th:text="${experience}" th:href="'/experience?experienceLevel=' + ${experience}"></a>
                 </span>
             </div>
-
         </div>
 
         <div class="searchResultMenu">
