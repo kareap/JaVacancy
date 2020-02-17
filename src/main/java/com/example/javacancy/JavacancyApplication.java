@@ -38,6 +38,10 @@ public class JavacancyApplication {
     public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
         filteredList = vacancyList;
         isFilterOn = false;
+        isFilteredByExperience = false;
+        isFilteredByLocation = false;
+        isFilteredBySalary = false;
+
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
         List<Vacancy> searchList = vacancyList;
@@ -74,59 +78,28 @@ public class JavacancyApplication {
 
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
-//        List<Vacancy> currentList = vacancyList;
-//        List<Vacancy> experienceList = new ArrayList<>();
-
-//        if (isFilterOn) {
-//            currentList = filteredList;
-//        }
-//
-//        for (int i = 0; i < currentList.size(); i++) {
-//            if (currentList.get(i).getExperience().toString().equals(experienceLevel)) {
-//                experienceList.add(currentList.get(i));
-//            }
-//        }
-//
-//        filteredList = experienceList;
 
         isFilteredByExperience = true;
         lastExperienceSearch = experienceLevel;
         List<Vacancy> experienceList = filterVacancies();
 
-
         m.addAttribute("vacancyList", experienceList);
         m.addAttribute("search", searchObject);
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
 
         return "index";
     }
 
     @GetMapping("/location")
     public String getLocation(@RequestParam String location, Model m, @ModelAttribute Search searchObject) {
-        /*List<Vacancy> currentList = vacancyList;
-        List<Vacancy> locationList = new ArrayList<>();
 
-        if (isFilterOn) {
-            currentList = filteredList;
-            if (isFilteredByLocation) {
-
-            }
-        }
-
-        for (int i = 0; i < currentList.size(); i++) {
-            if (currentList.get(i).getLocation().toString().equals(location)) {
-                locationList.add(currentList.get(i));
-            }
-        }*/
         isFilteredByLocation = true;
         lastLocationSearch = location;
         List<Vacancy> locationList = filterVacancies();
-
-
-        /*isFilterOn = true;
-        filteredList = locationList;
-        isFilteredByLocation = true;*/
 
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
@@ -138,9 +111,6 @@ public class JavacancyApplication {
 
     @GetMapping("/salary")
     public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject) {
-//        List<Vacancy> currentList = vacancyList;
-//        isFilterOn = true;
-//        filteredList = salaryList;
 
         isFilteredBySalary = true;
         lastSalarySearch = salaryRange;
