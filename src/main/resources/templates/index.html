@@ -8,10 +8,14 @@
 <body>
     <div th:replace="templates :: logo"></div>
 
+    <div >
+        <a class="addVacancyLink" href="/add" >Add vacancy</a>
+    </div>
+
     <div class="content">
         <div id="searchDiv">
             <form th:action="'/'" method="post" th:object="${search}" id="searchForm">
-                <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies" id="searchTextField" autofocus>
+                    <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies" id="searchTextField" autofocus>
                 <input type="submit" value="Search" class="submittButton">
             </form>
         </div>
@@ -58,13 +62,10 @@
         <div th:each="job : ${vacancyList}">
             <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
             <p th:text="${job.getCompanyName()}"></p>
-            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
+            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}" style="color: orange"></p>
             <hr>
         </div>
 
-        <div class="menuDivs addVacancy">
-            <a href="/add" >Add vacancy</a>
-        </div>
     </div>
 
     <div th:replace="templates :: footer"></div>
