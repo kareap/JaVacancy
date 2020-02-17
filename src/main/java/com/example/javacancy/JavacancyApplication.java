@@ -15,6 +15,8 @@ import java.util.List;
 public class JavacancyApplication {
 
     List<Vacancy> vacancyList;
+    List<Vacancy> filteredList;
+    Boolean isFilterOn = false;
 
     public JavacancyApplication() {
         vacancyList = new ArrayList<>();
@@ -60,14 +62,43 @@ public class JavacancyApplication {
         return "redirect:/?searchTerm=" + search.getSearchText();
     }
 
+//    @GetMapping("/filter")
+//    public String getFilter(@RequestParam String experienceLevel,
+//                            @RequestParam String location, Model m,
+//                            @RequestParam String salaryRange,
+//                            @ModelAttribute Search searchObject) {
+//        //   filter/alleFiltre
+//
+//
+//
+//        List<Vacancy> experienceList = new ArrayList<>();
+//        for (int i = 0; i < vacancyList.size(); i++) {
+//            if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
+//                experienceList.add(vacancyList.get(i));
+//            }
+//        }
+//        m.addAttribute("vacancyList", experienceList);
+//        m.addAttribute("search", searchObject);
+//
+//        return "index";
+//    }
+
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
+        List<Vacancy> currentList = vacancyList;
         List<Vacancy> experienceList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size(); i++) {
-            if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
-                experienceList.add(vacancyList.get(i));
+
+        if(isFilterOn){
+            currentList = filteredList;
+        }
+
+        for (int i = 0; i < currentList.size(); i++) {
+            if (currentList.get(i).getExperience().toString().equals(experienceLevel)) {
+                experienceList.add(currentList.get(i));
             }
         }
+
+        isFilterOn = true;
         m.addAttribute("vacancyList", experienceList);
         m.addAttribute("search", searchObject);
 
@@ -82,6 +113,8 @@ public class JavacancyApplication {
                 locationList.add(vacancyList.get(i));
             }
         }
+        isFilterOn = true;
+        filteredList = locationList;
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
 
@@ -236,7 +269,7 @@ public class JavacancyApplication {
                 vacancy.setSearchRelevance(newScore);
             }
 
-            // If search term is in location
+            // If search term is in Experience
             if (vacancy.getExperience().toString().toLowerCase().contains(searchTerm)) {
                 newScore = vacancy.getSearchRelevance() + 5;
                 vacancy.setSearchRelevance(newScore);
