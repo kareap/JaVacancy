@@ -16,7 +16,23 @@
         <p th:text="${job.getJobDescription()}"></p>
         <a th:href="'/application/' + ${jobId}" id="applyButton">Apply</a>
         <a href="/" id="applyBackButton">Back To Homepage</a>
+
+        <div class="otherVacancies">
+            <div th:if="${session.currentList.size() > 1}">
+                <h3>Other vacancies you might like</h3>
+                <div th:each="otherJob : ${session.currentList}">
+                    <div th:if="${job.getJobId() != otherJob.getJobId()}">
+                        <a th:text="${otherJob.getJobTitle()}" th:href="'/vacancy/'+${otherJob.getJobId()}"></a>
+                        <p th:text="${otherJob.getCompanyName()}"></p>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
+
+        </div>
     </div>
+
     <div th:replace="templates :: footer"></div>
 </body>
 </html>

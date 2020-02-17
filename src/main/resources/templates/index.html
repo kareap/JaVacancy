@@ -58,6 +58,8 @@
         </div>
         <hr>
 
+
+
         <!--    Print job vacancies -->
         <div th:each="job : ${vacancyList}">
             <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
