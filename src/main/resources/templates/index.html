@@ -47,6 +47,9 @@
                 <p th:text="'Whoopsie! There are no jobs that match your search...️ 🤷‍♂️'"️></p>
                 <a href="/">Remove filter</a>
             </div>
+            <div th:if="${isFilterOn}">
+                <a href="/">Remove filter</a>
+            </div>
         </div>
         <hr>
 

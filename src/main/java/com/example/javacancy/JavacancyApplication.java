@@ -74,23 +74,30 @@ public class JavacancyApplication {
 
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
-        List<Vacancy> currentList = vacancyList;
-        List<Vacancy> experienceList = new ArrayList<>();
+//        List<Vacancy> currentList = vacancyList;
+//        List<Vacancy> experienceList = new ArrayList<>();
 
-        if (isFilterOn) {
-            currentList = filteredList;
-        }
+//        if (isFilterOn) {
+//            currentList = filteredList;
+//        }
+//
+//        for (int i = 0; i < currentList.size(); i++) {
+//            if (currentList.get(i).getExperience().toString().equals(experienceLevel)) {
+//                experienceList.add(currentList.get(i));
+//            }
+//        }
+//
+//        filteredList = experienceList;
 
-        for (int i = 0; i < currentList.size(); i++) {
-            if (currentList.get(i).getExperience().toString().equals(experienceLevel)) {
-                experienceList.add(currentList.get(i));
-            }
-        }
+        isFilteredByExperience = true;
+        lastExperienceSearch = experienceLevel;
+        List<Vacancy> experienceList = filterVacancies();
 
-        isFilterOn = true;
-        filteredList = experienceList;
+
         m.addAttribute("vacancyList", experienceList);
         m.addAttribute("search", searchObject);
+        isFilterOn = true;
+        m.addAttribute("isFilterOn", isFilterOn);
 
         return "index";
     }
@@ -115,37 +122,35 @@ public class JavacancyApplication {
         isFilteredByLocation = true;
         lastLocationSearch = location;
         List<Vacancy> locationList = filterVacancies();
+
+
         /*isFilterOn = true;
         filteredList = locationList;
         isFilteredByLocation = true;*/
 
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
+        isFilterOn = true;
+        m.addAttribute("isFilterOn", isFilterOn);
 
         return "index";
     }
 
     @GetMapping("/salary")
     public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject) {
-        List<Vacancy> currentList = vacancyList;
-        int index = salaryRange.indexOf('-');
-        Integer startNumber = Integer.parseInt(salaryRange.substring(0, index));
-        Integer endNumber = Integer.parseInt(salaryRange.substring(index + 1));
+//        List<Vacancy> currentList = vacancyList;
+//        isFilterOn = true;
+//        filteredList = salaryList;
 
-        if (isFilterOn) {
-            currentList = filteredList;
-        }
+        isFilteredBySalary = true;
+        lastSalarySearch = salaryRange;
+        List<Vacancy> salaryList = filterVacancies();
 
-        List<Vacancy> salaryList = new ArrayList<>();
-        for (int i = 0; i < currentList.size(); i++) {
-            if (currentList.get(i).getSalary() > startNumber && currentList.get(i).getSalary() < endNumber) {
-                salaryList.add(currentList.get(i));
-            }
-        }
-        isFilterOn = true;
-        filteredList = salaryList;
+
         m.addAttribute("vacancyList", salaryList);
         m.addAttribute("search", searchObject);
+        isFilterOn = true;
+        m.addAttribute("isFilterOn", isFilterOn);
 
         return "index";
     }
@@ -360,13 +365,30 @@ public class JavacancyApplication {
             }
         }
         if (isFilteredBySalary) {
+
+            if (isFilteredByLocation){
+                currentList = newList;
+                newList = new ArrayList<>();
+            }
+
+            int index = lastSalarySearch.indexOf('-');
+            Integer startNumber = Integer.parseInt(lastSalarySearch.substring(0, index));
+            Integer endNumber = Integer.parseInt(lastSalarySearch.substring(index + 1));
+
             for (int i = 0; i < currentList.size(); i++) {
-                if (currentList.get(i).getSalary().toString().equals(lastSalarySearch)) {
+                if (currentList.get(i).getSalary() > startNumber && currentList.get(i).getSalary() < endNumber) {
                     newList.add(currentList.get(i));
                 }
             }
         }
+
         if (isFilteredByExperience) {
+
+            if (isFilteredByLocation || isFilteredBySalary){
+                currentList = newList;
+                newList = new ArrayList<>();
+            }
+
             for (int i = 0; i < currentList.size(); i++) {
                 if (currentList.get(i).getExperience().toString().equals(lastExperienceSearch)) {
                     newList.add(currentList.get(i));
