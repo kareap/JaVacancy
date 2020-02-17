@@ -208,8 +208,12 @@ input {
     font-size: 13px;
 }
 
+
 .successPage {
     height: 55vh;
+    text-align: center;
+    margin-top: 20px;
+
 }
 
 footer {
