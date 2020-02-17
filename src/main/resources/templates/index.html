@@ -8,14 +8,19 @@
 <body>
     <div th:replace="templates :: logo"></div>
 
+    <div >
+        <a class="addVacancyLink" href="/add" >Add vacancy</a>
+    </div>
+
     <div class="content">
         <div id="searchDiv">
             <form th:action="'/'" method="post" th:object="${search}" id="searchForm">
-                <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies" id="searchTextField" autofocus>
+                    <input type="text" name="title" th:field="*{searchText}" placeholder="Search for vacancies" id="searchTextField" autofocus>
                 <input type="submit" value="Search" class="submittButton">
             </form>
         </div>
 
+<<<<<<< HEAD
 <!--            <div class="menuDivs location">-->
 <!--&lt;!&ndash;                <div th:if="${searchBar != null && vacancyList.size() != 0}">&ndash;&gt;-->
 <!--&lt;!&ndash;                <p th:text="${vacancyList.size()} + ' results for: ' + ${searchBar}"></p>&ndash;&gt;-->
@@ -37,25 +42,29 @@
         <div id="filterButtons">
             <div>
                 <span th:each="location : ${T(com.example.javacancy.Location).values()}"  class="menuDivs location">
+=======
+        <div id="filterButtons">
+            <div  class="menuDivs location">
+                <span th:each="location : ${T(com.example.javacancy.Location).values()}" >
+>>>>>>> e628d35404d05fb6db74067c8d39d59a8238c823
                     <a  th:if="${location.toString() == lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${location.toString() != lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}"></a>
                 </span>
             </div>
 
-            <div>
-                <span th:each="salary : ${T(com.example.javacancy.Salary).values()}"  class="menuDivs salary">
+            <div  class="menuDivs salary">
+                <span th:each="salary : ${T(com.example.javacancy.Salary).values()}" >
                     <a  th:if="${salary.toString() == lastSalarySearch}" th:value="${salary}" th:text="${salary}" th:href="'/salary?salaryRange=' + ${salary}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${salary.toString() != lastSalarySearch}" th:value="${salary}" th:text="${salary}" th:href="'/salary?salaryRange=' + ${salary}"></a>
                 </span>
             </div>
 
-            <div>
-                <span th:each="experience : ${T(com.example.javacancy.Experience).values()}"  class="menuDivs experience">
+            <div  class="menuDivs experience">
+                <span th:each="experience : ${T(com.example.javacancy.Experience).values()}" >
                     <a  th:if="${experience.toString() == lastExperienceSearch}" th:value="${experience}" th:text="${experience}" th:href="'/experience?experienceLevel=' + ${experience}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${experience.toString() != lastExperienceSearch}" th:value="${experience}" th:text="${experience}" th:href="'/experience?experienceLevel=' + ${experience}"></a>
                 </span>
             </div>
-
         </div>
 
         <div class="searchResultMenu">
@@ -73,17 +82,16 @@
         </div>
         <hr>
 
+
+
         <!--    Print job vacancies -->
         <div th:each="job : ${vacancyList}">
             <a th:text="${job.getJobTitle()}" th:href="'/vacancy/'+${job.getJobId()}"></a>
             <p th:text="${job.getCompanyName()}"></p>
-            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}"></p>
+            <p th:text="'Relevance score: ' + ${job.getSearchRelevance()}" style="color: orange"></p>
             <hr>
         </div>
 
-        <div class="menuDivs addVacancy">
-            <a href="/add" >Add vacancy</a>
-        </div>
     </div>
 
     <div th:replace="templates :: footer"></div>

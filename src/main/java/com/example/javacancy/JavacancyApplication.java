@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +38,15 @@ public class JavacancyApplication {
     }
 
     @GetMapping("/")
-    public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
+    public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject, HttpSession s) {
         filteredList = vacancyList;
         isFilterOn = false;
         isFilteredByExperience = false;
         isFilteredByLocation = false;
         isFilteredBySalary = false;
+        lastSalarySearch = null;
+        lastExperienceSearch = null;
+        lastLocationSearch = null;
 
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
@@ -62,10 +66,12 @@ public class JavacancyApplication {
 
             // Add searchlist to model
             m.addAttribute("vacancyList", searchListWithRelevanceScore);
+            s.setAttribute("currentList" , searchListWithRelevanceScore);
 
             // Add all vacancies to model if not search
         } else {
             m.addAttribute("vacancyList", vacancyList);
+            s.setAttribute("currentList" , vacancyList);
         }
 
         return "index";
@@ -79,7 +85,7 @@ public class JavacancyApplication {
 
 
     @GetMapping("/experience")
-    public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
+    public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject, HttpSession s) {
 
         isFilteredByExperience = true;
         lastExperienceSearch = experienceLevel;
@@ -92,12 +98,13 @@ public class JavacancyApplication {
         m.addAttribute("lastExperienceSearch", lastExperienceSearch);
         m.addAttribute("lastLocationSearch", lastLocationSearch);
         m.addAttribute("lastSalarySearch", lastSalarySearch);
+        s.setAttribute("currentList" , experienceList);
 
         return "index";
     }
 
     @GetMapping("/location")
-    public String getLocation(@RequestParam String location, Model m, @ModelAttribute Search searchObject) {
+    public String getLocation(@RequestParam String location, Model m, @ModelAttribute Search searchObject, HttpSession s) {
 
         isFilteredByLocation = true;
         lastLocationSearch = location;
@@ -107,12 +114,16 @@ public class JavacancyApplication {
         m.addAttribute("search", searchObject);
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
+        s.setAttribute("currentList" , locationList);
 
         return "index";
     }
 
     @GetMapping("/salary")
-    public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject) {
+    public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject, HttpSession s) {
 
         isFilteredBySalary = true;
         lastSalarySearch = salaryRange;
@@ -123,12 +134,16 @@ public class JavacancyApplication {
         m.addAttribute("search", searchObject);
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
+        m.addAttribute("lastExperienceSearch", lastExperienceSearch);
+        m.addAttribute("lastLocationSearch", lastLocationSearch);
+        m.addAttribute("lastSalarySearch", lastSalarySearch);
+        s.setAttribute("currentList" , salaryList);
 
         return "index";
     }
 
     @GetMapping("/vacancy/{jobId}")
-    public String getVacancy(Model m, @PathVariable(required = true) String jobId) {
+    public String getVacancy(Model m, @PathVariable(required = true) String jobId, HttpSession s) {
         Vacancy currentJob = null;
 
         for (Vacancy v : vacancyList) {
@@ -142,6 +157,7 @@ public class JavacancyApplication {
         } else {
             m.addAttribute("vacancyList", vacancyList);
             m.addAttribute("job", currentJob);
+            s.setAttribute("currentList", s.getAttribute("currentList"));
             return "jobPage";
         }
     }
