@@ -20,33 +20,11 @@
             </form>
         </div>
 
-<<<<<<< HEAD
-<!--            <div class="menuDivs location">-->
-<!--&lt;!&ndash;                <div th:if="${searchBar != null && vacancyList.size() != 0}">&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${vacancyList.size()} + ' results for: ' + ${searchBar}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/" >Remove filter</a>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Oslo" >Oslo</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Bergen" >Bergen</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Trondheim" >Trondheim</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/location?location=Stavanger" >Stavanger</a>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
 
-<!--&lt;!&ndash;            <div class="menuDivs salary">&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=0-499999" >0-500k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=500000-749999" >500k-749k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=749000-899999" >750k-899k</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a href="/salary?salaryRange=900000-4000000" >900k+</a>&ndash;&gt;-->
-<!--             </div>-->
-
-        <div id="filterButtons">
-            <div>
-                <span th:each="location : ${T(com.example.javacancy.Location).values()}"  class="menuDivs location">
-=======
         <div id="filterButtons">
             <div  class="menuDivs location">
                 <span th:each="location : ${T(com.example.javacancy.Location).values()}" >
->>>>>>> e628d35404d05fb6db74067c8d39d59a8238c823
+
                     <a  th:if="${location.toString() == lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}" style="background-color: orange" class="activeButton"></a>
                     <a th:if="${location.toString() != lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}"></a>
                 </span>
@@ -74,7 +52,6 @@
             </div>
             <div th:if="${vacancyList.size() == 0}">
                 <p th:text="'Whoopsie! There are no jobs that match your search...️ 🤷‍♂️'"️></p>
-                <a href="/">Remove filter</a>
             </div>
             <div th:if="${isFilterOn}">
                 <a href="/">Remove filter</a>
