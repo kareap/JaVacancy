@@ -17,6 +17,13 @@ public class JavacancyApplication {
     List<Vacancy> vacancyList;
     List<Vacancy> filteredList;
     Boolean isFilterOn = false;
+    Boolean isFilteredByLocation = false;
+    Boolean isFilteredBySalary = false;
+    Boolean isFilteredByExperience = false;
+    String lastLocationSearch;
+    String lastSalarySearch;
+    String lastExperienceSearch;
+
 
     public JavacancyApplication() {
         vacancyList = new ArrayList<>();
@@ -29,6 +36,8 @@ public class JavacancyApplication {
 
     @GetMapping("/")
     public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject) {
+        filteredList = vacancyList;
+        isFilterOn = false;
         m.addAttribute("search", searchObject);
         m.addAttribute("searchBar", searchTerm);
         List<Vacancy> searchList = vacancyList;
@@ -48,7 +57,7 @@ public class JavacancyApplication {
             // Add searchlist to model
             m.addAttribute("vacancyList", searchListWithRelevanceScore);
 
-        // Add all vacancies to model if not search
+            // Add all vacancies to model if not search
         } else {
             m.addAttribute("vacancyList", vacancyList);
         }
@@ -62,33 +71,13 @@ public class JavacancyApplication {
         return "redirect:/?searchTerm=" + search.getSearchText();
     }
 
-//    @GetMapping("/filter")
-//    public String getFilter(@RequestParam String experienceLevel,
-//                            @RequestParam String location, Model m,
-//                            @RequestParam String salaryRange,
-//                            @ModelAttribute Search searchObject) {
-//        //   filter/alleFiltre
-//
-//
-//
-//        List<Vacancy> experienceList = new ArrayList<>();
-//        for (int i = 0; i < vacancyList.size(); i++) {
-//            if (vacancyList.get(i).getExperience().toString().equals(experienceLevel)) {
-//                experienceList.add(vacancyList.get(i));
-//            }
-//        }
-//        m.addAttribute("vacancyList", experienceList);
-//        m.addAttribute("search", searchObject);
-//
-//        return "index";
-//    }
 
     @GetMapping("/experience")
     public String getExperience(@RequestParam String experienceLevel, Model m, @ModelAttribute Search searchObject) {
         List<Vacancy> currentList = vacancyList;
         List<Vacancy> experienceList = new ArrayList<>();
 
-        if(isFilterOn){
+        if (isFilterOn) {
             currentList = filteredList;
         }
 
@@ -99,6 +88,7 @@ public class JavacancyApplication {
         }
 
         isFilterOn = true;
+        filteredList = experienceList;
         m.addAttribute("vacancyList", experienceList);
         m.addAttribute("search", searchObject);
 
@@ -107,14 +97,28 @@ public class JavacancyApplication {
 
     @GetMapping("/location")
     public String getLocation(@RequestParam String location, Model m, @ModelAttribute Search searchObject) {
+        /*List<Vacancy> currentList = vacancyList;
         List<Vacancy> locationList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size(); i++) {
-            if (vacancyList.get(i).getLocation().toString().equals(location)) {
-                locationList.add(vacancyList.get(i));
+
+        if (isFilterOn) {
+            currentList = filteredList;
+            if (isFilteredByLocation) {
+
             }
         }
-        isFilterOn = true;
+
+        for (int i = 0; i < currentList.size(); i++) {
+            if (currentList.get(i).getLocation().toString().equals(location)) {
+                locationList.add(currentList.get(i));
+            }
+        }*/
+        isFilteredByLocation = true;
+        lastLocationSearch = location;
+        List<Vacancy> locationList = filterVacancies();
+        /*isFilterOn = true;
         filteredList = locationList;
+        isFilteredByLocation = true;*/
+
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
 
@@ -123,16 +127,23 @@ public class JavacancyApplication {
 
     @GetMapping("/salary")
     public String getSalaryRange1(@RequestParam String salaryRange, Model m, @ModelAttribute Search searchObject) {
+        List<Vacancy> currentList = vacancyList;
         int index = salaryRange.indexOf('-');
         Integer startNumber = Integer.parseInt(salaryRange.substring(0, index));
-        Integer endNumber = Integer.parseInt(salaryRange.substring(index+1));
+        Integer endNumber = Integer.parseInt(salaryRange.substring(index + 1));
+
+        if (isFilterOn) {
+            currentList = filteredList;
+        }
 
         List<Vacancy> salaryList = new ArrayList<>();
-        for (int i = 0; i < vacancyList.size(); i++) {
-            if (vacancyList.get(i).getSalary() > startNumber && vacancyList.get(i).getSalary() < endNumber) {
-                salaryList.add(vacancyList.get(i));
+        for (int i = 0; i < currentList.size(); i++) {
+            if (currentList.get(i).getSalary() > startNumber && currentList.get(i).getSalary() < endNumber) {
+                salaryList.add(currentList.get(i));
             }
         }
+        isFilterOn = true;
+        filteredList = salaryList;
         m.addAttribute("vacancyList", salaryList);
         m.addAttribute("search", searchObject);
 
@@ -149,7 +160,7 @@ public class JavacancyApplication {
             }
         }
 
-        if(currentJob == null){
+        if (currentJob == null) {
             return "redirect:/";
         } else {
             m.addAttribute("vacancyList", vacancyList);
@@ -171,6 +182,7 @@ public class JavacancyApplication {
 
         return "redirect:/";
     }
+
     @GetMapping("/application/{jobId}")
     public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
 
@@ -182,7 +194,7 @@ public class JavacancyApplication {
             }
         }
 
-        if(currentJob == null){
+        if (currentJob == null) {
             return "redirect:/";
         } else {
 
@@ -279,14 +291,14 @@ public class JavacancyApplication {
         return list;
     }
 
-    public void resetRelevanceScore(){
-        for(Vacancy v : vacancyList){
+    public void resetRelevanceScore() {
+        for (Vacancy v : vacancyList) {
             v.setSearchRelevance(0);
         }
     }
 
 
-    public void populateDatabase(){
+    public void populateDatabase() {
         Vacancy job1 = new Vacancy("Junior Java Developer", "Microsoft", Location.Oslo, Experience.Entry, 463000, "Experience in applications development using Java Spring Framework with expertise on Core Java , J2EE, OOPS, Spring Boot, Spring MVC, REST , Hibernate, Javascipt. Should have mandatory experience in JSP, Servlets. Excellent experience in web UI like HTML, CSS, JavaScript, JQuery, AJAX, ReactJS etc. Web services like Restful and Soap. Databases : Oracle or MySQL or SQL Server with JDBC connections. Working experience in Servers like Tomcat Apache, WebLogic, JBoss. JSON/XML : request/response understanding. GIT or repository management.");
         Vacancy job2 = new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently.");
         Vacancy job3 = new Vacancy("Software Engineer", "KVH Industries", Location.Oslo, Experience.Entry, 447000, "We are looking for an experienced Software Engineer to join our technology team who will be working on our Next Generation VSAT project. You will be developing, configuring, and packaging software in a hybrid-cloud and embedded systems environment. You will be managing and deploying software to devices over satellite communications. You will be working on a dynamic team practicing scrum and open source development methodologies.");
@@ -336,4 +348,31 @@ public class JavacancyApplication {
         vacancyList.add(job23);
     }
 
+    public List<Vacancy> filterVacancies() {
+        List<Vacancy> currentList = vacancyList;
+        List<Vacancy> newList = new ArrayList<>();
+
+        if (isFilteredByLocation) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).getLocation().toString().equals(lastLocationSearch)) {
+                    newList.add(currentList.get(i));
+                }
+            }
+        }
+        if (isFilteredBySalary) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).getSalary().toString().equals(lastSalarySearch)) {
+                    newList.add(currentList.get(i));
+                }
+            }
+        }
+        if (isFilteredByExperience) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).getExperience().toString().equals(lastExperienceSearch)) {
+                    newList.add(currentList.get(i));
+                }
+            }
+        }
+        return newList;
+    }
 }
