@@ -16,7 +16,6 @@
             </form>
         </div>
 
-        <div id="filterButtons">
 <!--            <div class="menuDivs location">-->
 <!--&lt;!&ndash;                <div th:if="${searchBar != null && vacancyList.size() != 0}">&ndash;&gt;-->
 <!--&lt;!&ndash;                <p th:text="${vacancyList.size()} + ' results for: ' + ${searchBar}"></p>&ndash;&gt;-->
@@ -34,6 +33,8 @@
 <!--&lt;!&ndash;                <a href="/salary?salaryRange=749000-899999" >750k-899k</a>&ndash;&gt;-->
 <!--&lt;!&ndash;                <a href="/salary?salaryRange=900000-4000000" >900k+</a>&ndash;&gt;-->
 <!--             </div>-->
+
+        <div id="filterButtons">
             <div>
                 <span th:each="location : ${T(com.example.javacancy.Location).values()}"  class="menuDivs location">
                     <a  th:if="${location.toString() == lastLocationSearch}" th:value="${location}" th:text="${location}" th:href="'/location?location=' + ${location}" style="background-color: orange" class="activeButton"></a>

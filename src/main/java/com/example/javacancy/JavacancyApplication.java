@@ -14,7 +14,9 @@ import java.util.List;
 @Controller
 public class JavacancyApplication {
 
-    List<Vacancy> vacancyList;
+    public List<Vacancy> vacancyList;
+
+
     List<Vacancy> filteredList;
     Boolean isFilterOn = false;
     Boolean isFilteredByLocation = false;
@@ -336,7 +338,7 @@ public class JavacancyApplication {
         }
         if (isFilteredBySalary) {
 
-            if (isFilteredByLocation){
+            if (isFilteredByLocation) {
                 currentList = newList;
                 newList = new ArrayList<>();
             }
@@ -354,7 +356,7 @@ public class JavacancyApplication {
 
         if (isFilteredByExperience) {
 
-            if (isFilteredByLocation || isFilteredBySalary){
+            if (isFilteredByLocation || isFilteredBySalary) {
                 currentList = newList;
                 newList = new ArrayList<>();
             }
@@ -367,4 +369,10 @@ public class JavacancyApplication {
         }
         return newList;
     }
+
+    public  int getVacancyLength() {
+        int vacancyLength = vacancyList.size();
+        return vacancyLength;
+    }
+
 }
