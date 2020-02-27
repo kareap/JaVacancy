@@ -46,6 +46,4 @@ public class JavacancyApplicationTest {
         var.isFilteredByLocation = true;
         Assert.assertEquals(4, var.filterVacancies().size());
     }
-
-
 }
