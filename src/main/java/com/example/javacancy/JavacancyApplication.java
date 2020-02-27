@@ -1,5 +1,6 @@
 package com.example.javacancy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.List;
 @SpringBootApplication
 @Controller
 public class JavacancyApplication {
+
 
     public List<Vacancy> vacancyList;
 
@@ -267,6 +273,24 @@ public class JavacancyApplication {
         }
     }
 
+
+    public void addVacancy(Vacancy vacancy) {
+        try {
+            Connection c = dataSource.getConnection();
+            PreparedStatement ps = c.prepareStatement("INSERT INTO Vacancy (jobId, jobTitle, companyName, location, experience, salary, jobDescription) VALUES (?,?,?,?,?,?,?)");
+            ps.setString(1, vacancy.getJobId());
+            ps.setString(2, vacancy.getJobTitle());
+            ps.setString(3, vacancy.getCompanyName());
+            ps.setString(4, vacancy.getLocation().toString());
+            ps.setString(5, vacancy.getExperience().toString());
+            ps.setString(6, vacancy.getSalary().toString());
+            ps.setString(7, vacancy.getJobDescription());
+            int rows = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void populateDatabase() {
         vacancyList.add(new Vacancy("Junior Java Developer", "Microsoft", Location.Oslo, Experience.Entry, 463000, "Experience in applications development using Java Spring Framework with expertise on Core Java , J2EE, OOPS, Spring Boot, Spring MVC, REST , Hibernate, Javascipt. Should have mandatory experience in JSP, Servlets. Excellent experience in web UI like HTML, CSS, JavaScript, JQuery, AJAX, ReactJS etc. Web services like Restful and Soap. Databases : Oracle or MySQL or SQL Server with JDBC connections. Working experience in Servers like Tomcat Apache, WebLogic, JBoss. JSON/XML : request/response understanding. GIT or repository management."));
         vacancyList.add(new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently."));
@@ -291,6 +315,11 @@ public class JavacancyApplication {
         vacancyList.add(new Vacancy("Junior Software Developer", "First Engineers", Location.Stavanger, Experience.Entry, 454000, "Help us accelerate the world’s transformation to digital assets. Norwegian Block Exchange is looking for software developers. Norwegian Block Exchange (NBX) is building the best cryptocurrency exchange and digital ecosystems for consumers and institutions, optimizing ways for businesses across industries to operate. NBX will lead the community for distributed ledger technologies and other digital assets through security, integrity and customer experience."));
         vacancyList.add(new Vacancy("Full Stack Developer", "Full Stack Inc", Location.Stavanger, Experience.Senior, 620000, "We are looking for a Sr. Full Stack developer to join the customer team and help in solving challenging integrations by delivering quality code. Experience in Java development and Spring Boot is must have. Experience with Cloud based solutions. Ability to take initiative in solving complex problems. Being a team player and getting things done. Good communication skills in both English and Norwegian (English is a must, Norwegian or Swedish is desired)."));
         vacancyList.add(new Vacancy("Senior Software Engineer", "Everbridge", Location.Stavanger, Experience.Senior, 920000, "Everbridge: a fast-growing global provider of SaaS-based critical communications and enterprise safety solutions currently have a fantastic opportunity for Senior Software Engineer to be based in one of our Norwegian offices: Oslo, Stavanger/Sandnes or Bergen."));
+
+        for (Vacancy v : vacancyList) {
+            addVacancy(v);
+        }
+
     }
 
     public List<Vacancy> filterVacancies() {
