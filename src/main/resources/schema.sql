@@ -5,7 +5,7 @@ CREATE TABLE VACANCY(
   company_name VARCHAR(40) NOT NULL,
   location ENUM ('Oslo', 'Trondheim', 'Bergen', 'Stavanger') NOT NULL,
   experience ENUM ('Entry', 'Mid', 'Senior') NOT NULL,
-  salary ENUM ('Level1', 'Level2', 'Level3', 'Level4') NOT NULL,
+  salary BIGINT NOT NULL,
   job_description VARCHAR(5000) NOT NULL,
   search_relevance BIGINT
 );
@@ -18,7 +18,8 @@ last_name VARCHAR (25),
 email VARCHAR (40),
 phone_number BIGINT,
 application_text VARCHAR (5000),
-vacancy_id BIGINT FOREIGN KEY (vacancy_id) REFERENCES VACANCY(id)
+vacancy_id BIGINT,
+FOREIGN KEY (vacancy_id) REFERENCES VACANCY(id)
 );
 
 

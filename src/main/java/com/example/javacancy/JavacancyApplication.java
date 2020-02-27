@@ -21,15 +21,9 @@ import java.util.List;
 @Controller
 public class JavacancyApplication {
 
-    @Autowired
-    private DataSource dataSource;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-    @Autowired
-    VacancyRepository vacancyRepository;
-
+    private final DataSource dataSource;
+    final ApplicationRepository applicationRepository;
+    final VacancyRepository vacancyRepository;
     public List<Vacancy> vacancyList;
 
     List<Vacancy> filteredList;
@@ -41,8 +35,12 @@ public class JavacancyApplication {
     String lastSalarySearch;
     String lastExperienceSearch;
 
-    public JavacancyApplication() {
+    public JavacancyApplication(DataSource dataSource, ApplicationRepository applicationRepository, VacancyRepository vacancyRepository) {
         vacancyList = new ArrayList<>();
+
+        this.dataSource = dataSource;
+        this.applicationRepository = applicationRepository;
+        this.vacancyRepository = vacancyRepository;
         populateDatabase();
     }
 
@@ -296,20 +294,21 @@ public class JavacancyApplication {
 
 
     public void addVacancy(Vacancy vacancy) {
-        try {
-            Connection c = dataSource.getConnection();
-            PreparedStatement ps = c.prepareStatement("INSERT INTO Vacancy (jobId, jobTitle, companyName, location, experience, salary, jobDescription) VALUES (?,?,?,?,?,?,?)");
-            ps.setString(1, vacancy.getJobId());
-            ps.setString(2, vacancy.getJobTitle());
-            ps.setString(3, vacancy.getCompanyName());
-            ps.setString(4, vacancy.getLocation().toString());
-            ps.setString(5, vacancy.getExperience().toString());
-            ps.setString(6, vacancy.getSalary().toString());
-            ps.setString(7, vacancy.getJobDescription());
-            int rows = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        vacancyRepository.save(vacancy);
+//        try {
+//            Connection c = dataSource.getConnection();
+//            PreparedStatement ps = c.prepareStatement("INSERT INTO Vacancy (job_id, job_title, company_name, location, experience, salary, job_description) VALUES (?,?,?,?,?,?,?)");
+//            ps.setString(1, vacancy.getJobId());
+//            ps.setString(2, vacancy.getJobTitle());
+//            ps.setString(3, vacancy.getCompanyName());
+//            ps.setString(4, vacancy.getLocation().toString());
+//            ps.setString(5, vacancy.getExperience().toString());
+//            ps.setString(6, vacancy.getSalary().toString());
+//            ps.setString(7, vacancy.getJobDescription());
+//            int rows = ps.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void populateDatabase() {
@@ -393,8 +392,8 @@ public class JavacancyApplication {
     }
 
     // Dummy method for the tests
-    public int getVacancyLength() {
-        int vacancyLength = vacancyList.size();
+    public long getVacancyLength() {
+        long vacancyLength = vacancyRepository.count();
         return vacancyLength;
     }
 
