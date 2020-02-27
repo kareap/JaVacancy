@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 @Controller
@@ -36,11 +37,10 @@ public class JavacancyApplication {
     String lastExperienceSearch;
 
     public JavacancyApplication(DataSource dataSource, ApplicationRepository applicationRepository, VacancyRepository vacancyRepository) {
-        vacancyList = new ArrayList<>();
-
         this.dataSource = dataSource;
         this.applicationRepository = applicationRepository;
         this.vacancyRepository = vacancyRepository;
+        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
         populateDatabase();
     }
 
@@ -53,6 +53,7 @@ public class JavacancyApplication {
         // Resett search results
         resetFilters();
         resetRelevanceScore();
+        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
 
         // Prepare for new search results
         List<Vacancy> searchList = vacancyList;
@@ -162,6 +163,7 @@ public class JavacancyApplication {
     // Add new vacancy
     @PostMapping("/add")
     public String addVacancyPost(@ModelAttribute Vacancy vacancy) {
+        System.out.println(vacancy.getCompanyName());
         addVacancy(vacancy);
         return "redirect:/";
     }
@@ -294,21 +296,10 @@ public class JavacancyApplication {
 
 
     public void addVacancy(Vacancy vacancy) {
+        // Add random job ID
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        vacancy.setJobId(String.valueOf(random.nextInt(500000, 999999)));
         vacancyRepository.save(vacancy);
-//        try {
-//            Connection c = dataSource.getConnection();
-//            PreparedStatement ps = c.prepareStatement("INSERT INTO Vacancy (job_id, job_title, company_name, location, experience, salary, job_description) VALUES (?,?,?,?,?,?,?)");
-//            ps.setString(1, vacancy.getJobId());
-//            ps.setString(2, vacancy.getJobTitle());
-//            ps.setString(3, vacancy.getCompanyName());
-//            ps.setString(4, vacancy.getLocation().toString());
-//            ps.setString(5, vacancy.getExperience().toString());
-//            ps.setString(6, vacancy.getSalary().toString());
-//            ps.setString(7, vacancy.getJobDescription());
-//            int rows = ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void populateDatabase() {
