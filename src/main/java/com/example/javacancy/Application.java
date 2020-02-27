@@ -1,14 +1,25 @@
 package com.example.javacancy;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Entity
 public class Application {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
     String firstName;
     String lastName;
     String email;
     String phoneNumber;
     String applicationText;
     String applicationId;
+
+    public Application() {
+    }
 
     public Application(String firstName, String lastName, String email, String phoneNumber, String applicationText) {
         this.firstName = firstName;

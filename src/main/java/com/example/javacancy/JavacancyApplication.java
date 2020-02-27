@@ -1,12 +1,18 @@
 package com.example.javacancy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Entity;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +20,15 @@ import java.util.List;
 @SpringBootApplication
 @Controller
 public class JavacancyApplication {
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    ApplicationRepository applicationRepository;
+
+    @Autowired
+    VacancyRepository vacancyRepository;
 
     public List<Vacancy> vacancyList;
 
@@ -60,12 +75,12 @@ public class JavacancyApplication {
 
             // Add searchresults to model and session
             m.addAttribute("vacancyList", searchListWithRelevanceScore);
-            s.setAttribute("currentList" , searchListWithRelevanceScore);
+            s.setAttribute("currentList", searchListWithRelevanceScore);
 
-        // Add all vacancies to model if not search
+            // Add all vacancies to model if not search
         } else {
             m.addAttribute("vacancyList", vacancyList);
-            s.setAttribute("currentList" , vacancyList);
+            s.setAttribute("currentList", vacancyList);
         }
 
         m.addAttribute("search", searchObject);
@@ -99,7 +114,7 @@ public class JavacancyApplication {
         List<Vacancy> locationList = filterVacancies();
         m.addAttribute("vacancyList", locationList);
         m.addAttribute("search", searchObject);
-        s.setAttribute("currentList" , locationList);
+        s.setAttribute("currentList", locationList);
         updateFiltersAndAddToModel(m);
 
         return "index";
@@ -111,7 +126,7 @@ public class JavacancyApplication {
         isFilteredBySalary = true;
         lastSalarySearch = salaryRange;
         List<Vacancy> salaryList = filterVacancies();
-        s.setAttribute("currentList" , salaryList);
+        s.setAttribute("currentList", salaryList);
         m.addAttribute("vacancyList", salaryList);
         m.addAttribute("search", searchObject);
         updateFiltersAndAddToModel(m);
@@ -149,9 +164,21 @@ public class JavacancyApplication {
     // Add new vacancy
     @PostMapping("/add")
     public String addVacancy(@ModelAttribute Vacancy vacancy) {
-        Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription());
-        vacancyList.add(newVacancy);
+        /*Vacancy newVacancy = new Vacancy(vacancy.getJobTitle(), vacancy.getCompanyName(), vacancy.getLocation(), vacancy.getExperience(), vacancy.getSalary(), vacancy.getJobDescription());
+        vacancyList.add(newVacancy);*/
 
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement
+                     ("INSERT INTO Vacancy (Title, CompanyName, Location, Experience, Salary, JobDescription) VALUES (?,?,?,?,?,?)")) {
+            preparedStatement.setString(1, vacancy.getJobTitle());
+            preparedStatement.setString(2, vacancy.getCompanyName());
+            preparedStatement.setString(3, vacancy.getExperience().toString());
+            preparedStatement.setString(4, vacancy.getSalary().toString());
+            preparedStatement.setString(5, vacancy.getJobDescription());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return "redirect:/";
     }
 
@@ -178,6 +205,20 @@ public class JavacancyApplication {
     @PostMapping("/application")
     public String sentApplication(@ModelAttribute Application application) {
         Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
+
+//        try (Connection connection = dataSource.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement
+//                     ("INSERT INTO Vacancy (Title, CompanyName, Location, Experience, Salary, JobDescription) VALUES (?,?,?,?,?,?)")) {
+//            preparedStatement.setString(1, application.getJobTitle());
+//            preparedStatement.setString(2, application.getCompanyName());
+//            preparedStatement.setString(3, application.getExperience().toString());
+//            preparedStatement.setString(4, application.getSalary().toString());
+//            preparedStatement.setString(5, application.getJobDescription());
+//            preparedStatement.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
         return "redirect:/success";
     }
 
@@ -343,13 +384,13 @@ public class JavacancyApplication {
     }
 
     // Dummy method for the tests
-    public  int getVacancyLength() {
+    public int getVacancyLength() {
         int vacancyLength = vacancyList.size();
         return vacancyLength;
     }
 
     // Reset filters, used on the front page
-    public void resetFilters(){
+    public void resetFilters() {
         filteredList = vacancyList;
         isFilterOn = false;
         isFilteredByExperience = false;
@@ -361,7 +402,7 @@ public class JavacancyApplication {
     }
 
     // Most used model attributes
-    public void updateFiltersAndAddToModel(Model m){
+    public void updateFiltersAndAddToModel(Model m) {
         isFilterOn = true;
         m.addAttribute("isFilterOn", isFilterOn);
         m.addAttribute("lastExperienceSearch", lastExperienceSearch);
