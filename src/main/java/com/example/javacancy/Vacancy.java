@@ -14,6 +14,7 @@ public class Vacancy implements Comparable<Vacancy> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size ()
     private String jobTitle;
     private String companyName;
     private Location location;
