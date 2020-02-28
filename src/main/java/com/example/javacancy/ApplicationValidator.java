@@ -12,5 +12,12 @@ public class ApplicationValidator implements org.springframework.validation.Vali
     @Override
     public void validate(Object object, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, "jobTitle", "text.empty");
+        ValidationUtils.rejectIfEmpty(errors, "companyName", "companyName.empty");
+        ValidationUtils.rejectIfEmpty(errors, "location", "location.empty");
+        ValidationUtils.rejectIfEmpty(errors, "experience", "experience.empty");
+        ValidationUtils.rejectIfEmpty(errors, "salary", "salary.empty");
+        ValidationUtils.rejectIfEmpty(errors, "jobDescription", "jobDescription.empty");
+
+        //ValidationUtils.rejectValue(errors, "jobDescription", "jobDescription.empty");
     }
 }
