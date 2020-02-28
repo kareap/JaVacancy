@@ -22,7 +22,9 @@ public class ApplicationValidator implements org.springframework.validation.Vali
         ValidationUtils.rejectIfEmpty(errors, "email", "email.empty");
         ValidationUtils.rejectIfEmpty(errors, "phoneNumber", "phoneNumber.empty");
         ValidationUtils.rejectIfEmpty(errors, "applicationText", "applicationText.empty");
+
         Application application = (Application) object;
+
         if (application.getFirstName().length() < 2 || application.getFirstName().length() > 24) {
             errors.rejectValue("firstName", "firstName.length");
         }
