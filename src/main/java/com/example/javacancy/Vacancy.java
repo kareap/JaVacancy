@@ -83,4 +83,36 @@ public class Vacancy implements Comparable<Vacancy> {
     public int compareTo(Vacancy v) {
         return Integer.compare(v.getSearchRelevance(), searchRelevance);
     }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setExperience(Experience experience) {
+        this.experience = experience;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setSalary(Integer salary) {
+        this.salary = salary;
+    }
+
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
+    }
 }

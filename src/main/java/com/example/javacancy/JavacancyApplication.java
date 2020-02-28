@@ -1,6 +1,5 @@
 package com.example.javacancy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -8,15 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Entity;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 @Controller
@@ -37,11 +33,10 @@ public class JavacancyApplication {
     String lastExperienceSearch;
 
     public JavacancyApplication(DataSource dataSource, ApplicationRepository applicationRepository, VacancyRepository vacancyRepository) {
-        vacancyList = new ArrayList<>();
-
         this.dataSource = dataSource;
         this.applicationRepository = applicationRepository;
         this.vacancyRepository = vacancyRepository;
+        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
         populateDatabase();
     }
 
@@ -54,6 +49,7 @@ public class JavacancyApplication {
         // Resett search results
         resetFilters();
         resetRelevanceScore();
+        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
 
         // Prepare for new search results
         List<Vacancy> searchList = vacancyList;
@@ -192,13 +188,22 @@ public class JavacancyApplication {
         } else {
             m.addAttribute("application", application);
             m.addAttribute("vacancy", currentJob);
+            m.addAttribute("id", jobId);
             return "application";
         }
     }
 
-    @PostMapping("/application")
-    public String sentApplication(@ModelAttribute Application application) {
-        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
+    @PostMapping("/application/{jobId}")
+    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application) {
+
+        // Add random job ID
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        application.setApplicationId(String.valueOf(random.nextInt(100000, 499999)));
+
+        application.setVacancyId(jobId);
+
+        applicationRepository.save(application);
+//        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
 
 //        try (Connection connection = dataSource.getConnection();
 //             PreparedStatement preparedStatement = connection.prepareStatement
@@ -304,25 +309,13 @@ public class JavacancyApplication {
 
 
     public void addVacancy(Vacancy vacancy) {
+        // Add random job ID
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        vacancy.setJobId(String.valueOf(random.nextInt(500000, 999999)));
         vacancyRepository.save(vacancy);
-//        try {
-//            Connection c = dataSource.getConnection();
-//            PreparedStatement ps = c.prepareStatement("INSERT INTO Vacancy (job_id, job_title, company_name, location, experience, salary, job_description) VALUES (?,?,?,?,?,?,?)");
-//            ps.setString(1, vacancy.getJobId());
-//            ps.setString(2, vacancy.getJobTitle());
-//            ps.setString(3, vacancy.getCompanyName());
-//            ps.setString(4, vacancy.getLocation().toString());
-//            ps.setString(5, vacancy.getExperience().toString());
-//            ps.setString(6, vacancy.getSalary().toString());
-//            ps.setString(7, vacancy.getJobDescription());
-//            int rows = ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void populateDatabase() {
-        vacancyList.add(new Vacancy("Junior Java Developer", "Microsoft", Location.Oslo, Experience.Entry, 463000, "Experience in applications development using Java Spring Framework with expertise on Core Java , J2EE, OOPS, Spring Boot, Spring MVC, REST , Hibernate, Javascipt. Should have mandatory experience in JSP, Servlets. Excellent experience in web UI like HTML, CSS, JavaScript, JQuery, AJAX, ReactJS etc. Web services like Restful and Soap. Databases : Oracle or MySQL or SQL Server with JDBC connections. Working experience in Servers like Tomcat Apache, WebLogic, JBoss. JSON/XML : request/response understanding. GIT or repository management."));
         vacancyList.add(new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently."));
         vacancyList.add(new Vacancy("Software Engineer", "KVH Industries", Location.Oslo, Experience.Entry, 447000, "We are looking for an experienced Software Engineer to join our technology team who will be working on our Next Generation VSAT project. You will be developing, configuring, and packaging software in a hybrid-cloud and embedded systems environment. You will be managing and deploying software to devices over satellite communications. You will be working on a dynamic team practicing scrum and open source development methodologies."));
         vacancyList.add(new Vacancy("Java Developer", "Sportradar", Location.Bergen, Experience.Senior, 890000, "As a Full Stack Java Software Developer, you will participate in development of the core Sportradar product and services. Currently we are looking for developers within the fields of core live odds services, trading, scout planning and core backend systems. Our systems are daily used by thousands of users and handle millions of transactions. You will work in a small team of highly motivated developers and to a large degree, influence what tasks you will be assigned to and how the team should collaborate. You will be assigned to a team based on your own interest and experience. Development is mainly done in Java, but experience with other tools like JavaScript or PHP is a plus since our strategy is to use the most efficient tools depending on the situation. Our teams work closely with other development teams in Norway, Europe andUS. We have recently initiated new projects within several areas to take advantage of the flexibility and scalability of cloud services like AWS and Azure. This includes several training programs within cutting edge technologies for our employees."));

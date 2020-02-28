@@ -17,6 +17,7 @@ public class Application {
     String phoneNumber;
     String applicationText;
     String applicationId;
+    String vacancyId;
 
     public Application() {
     }
@@ -51,5 +52,37 @@ public class Application {
 
     public String getApplicationText() {
         return applicationText;
+    }
+
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public void setVacancyId(String vacancyId) {
+        this.vacancyId = vacancyId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setApplicationText(String applicationText) {
+        this.applicationText = applicationText;
     }
 }
