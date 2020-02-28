@@ -39,7 +39,6 @@ public class JavacancyApplication {
         this.applicationRepository = applicationRepository;
         this.vacancyRepository = vacancyRepository;
         vacancyList = (List<Vacancy>) vacancyRepository.findAll();
-        // populateDatabase();
     }
 
     public static void main(String[] args) {
@@ -48,10 +47,14 @@ public class JavacancyApplication {
 
     @GetMapping("/")
     public String getIndex(Model m, @RequestParam(required = false) String searchTerm, @ModelAttribute Search searchObject, HttpSession s) {
+        // Populate database
+        if(vacancyList.size() < 2){
+            populateDatabase();
+            vacancyList = (List<Vacancy>) vacancyRepository.findAll();
+        }
         // Resett search results
         resetFilters();
         resetRelevanceScore();
-        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
 
         // Prepare for new search results
         List<Vacancy> searchList = vacancyList;
