@@ -10,8 +10,8 @@ public class VacancyValidator implements org.springframework.validation.Validato
     }
 
     @Override
-    public void validate(Object object, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "jobTitle", "jobTitle.empty");
+    public void validate(Vacancy vacancy, Errors errors) {
+        ValidationUtils.rejectIfEmpty(errors, vacancy.getJobTitle(), "jobTitle.empty");
         ValidationUtils.rejectIfEmpty(errors, "jobTitle", "jobTitle.maxlength=20");
     }
 }
