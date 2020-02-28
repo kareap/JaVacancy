@@ -11,6 +11,10 @@ public class ApplicationValidator implements org.springframework.validation.Vali
 
     @Override
     public void validate(Object object, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "jobTitle", "text.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "firstName.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "lastName.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "email.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneNumber", "phoneNumber.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "applicationText", "applicationText.empty");
     }
 }
