@@ -33,7 +33,7 @@ public class VacancyValidator implements org.springframework.validation.Validato
         }
 
         if(app.getJobDescription().length() < 5 && app.getJobDescription().length() < 5000) {
-            errors.rejectValue("companyName", "Company name must be between 2 and 40 characters");
+            errors.rejectValue("jobDescription", "Job description must be between 5 and 5000 characters");
         }
     }
 }
