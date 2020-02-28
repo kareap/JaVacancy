@@ -10,11 +10,11 @@
     <div class="content">
         <form action="/add" method="POST" th:object="${vacancy}" id="addVacancyForm">
             <h1>Add vacancy</h1>
-            <input required type="text" name="title" th:field="*{jobTitle}" placeholder="Job Title" autofocus>
-            <input required type="text" name="company" th:field="*{companyName}" placeholder="Company Name">
-            <input required type="number" name="salary" th:field="*{salary}" placeholder="Salary">
+            <input type="text" name="title" th:field="*{jobTitle}" placeholder="Job Title" autofocus>
+            <input type="text" name="company" th:field="*{companyName}" placeholder="Company Name">
+            <inputtype="number" name="salary" th:field="*{salary}" placeholder="Salary">
 
-            <select required name="experience">
+            <select name="experience">
                 <option value="" selected disabled hidden>Experience Level</option>
                 <option th:each="experience : ${T(com.example.javacancy.Experience).values()}"
                         th:value="${experience}"
@@ -22,14 +22,14 @@
                 </option>
             </select>
 
-            <select required name="location">
+            <select name="location">
                 <option value="" selected disabled hidden>Location</option>
                 <option th:each="location : ${T(com.example.javacancy.Location).values()}"
                         th:value="${location}"
                         th:text="${location}">
                 </option>
             </select>
-            <textarea required name="jobDescription" id="" cols="30" rows="10" th:field="*{jobDescription}" placeholder="Job Description"></textarea>
+            <textarea name="jobDescription" id="" cols="30" rows="10" th:field="*{jobDescription}" placeholder="Job Description"></textarea>
             <div id="addVacancyButtons">
                 <input type="submit" value="Publish" id="addVacancyPublishButton">
                 <a href="/" id="addVacancyCancelButton">Cancel</a>

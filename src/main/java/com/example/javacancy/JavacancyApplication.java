@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -189,11 +190,19 @@ public class JavacancyApplication {
 
     // Add new vacancy
     @PostMapping("/add")
-    public String addVacancyPost(@ModelAttribute Vacancy vacancy) {
-        System.out.println(vacancy.getCompanyName());
+    public String addVacancyPost(@ModelAttribute Vacancy vacancy, Model model, BindingResult result) {
+        VacancyValidator vacancyValidator = new VacancyValidator();
+        if (vacancyValidator.supports(vacancy.getClass())) {
+            vacancyValidator.validate(vacancy, result);
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
+            return "addVacancy";
+        }
         addVacancy(vacancy);
         return "redirect:/";
     }
+
 
     @GetMapping("/application/{jobId}")
     public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
@@ -216,16 +225,39 @@ public class JavacancyApplication {
         }
     }
 
+    //add application
     @PostMapping("/application/{jobId}")
-    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application) {
+    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application, Model model, BindingResult result) {
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
         application.setApplicationId(String.valueOf(random.nextInt(100000, 999999)));
-
         application.setVacancyId(jobId);
 
+        ApplicationValidator applicationValidator = new ApplicationValidator();
+        if (applicationValidator.supports(application.getClass())) {
+            applicationValidator.validate(application, result);
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
+            return "application";
+        }
         applicationRepository.save(application);
+
+//        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
+
+//        try (Connection connection = dataSource.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement
+//                     ("INSERT INTO Vacancy (Title, CompanyName, Location, Experience, Salary, JobDescription) VALUES (?,?,?,?,?,?)")) {
+//            preparedStatement.setString(1, application.getJobTitle());
+//            preparedStatement.setString(2, application.getCompanyName());
+//            preparedStatement.setString(3, application.getExperience().toString());
+//            preparedStatement.setString(4, application.getSalary().toString());
+//            preparedStatement.setString(5, application.getJobDescription());
+//            preparedStatement.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         return "redirect:/success";
     }
@@ -326,7 +358,6 @@ public class JavacancyApplication {
     }
 
     public void populateDatabase() {
-        vacancyList.add(new Vacancy("Junior Java Developer", "Microsoft", Location.Oslo, Experience.Entry, 463000, "Experience in applications development using Java Spring Framework with expertise on Core Java , J2EE, OOPS, Spring Boot, Spring MVC, REST , Hibernate, Javascipt. Should have mandatory experience in JSP, Servlets. Excellent experience in web UI like HTML, CSS, JavaScript, JQuery, AJAX, ReactJS etc. Web services like Restful and Soap. Databases : Oracle or MySQL or SQL Server with JDBC connections. Working experience in Servers like Tomcat Apache, WebLogic, JBoss. JSON/XML : request/response understanding. GIT or repository management."));
         vacancyList.add(new Vacancy("Senior Software Developer (Java)", "ABB", Location.Stavanger, Experience.Senior, 880000, "Requires a bachelor’s or foreign equivalent degree in computer science, engineering, or a related field and 8 years of experience in the position offered or 8 years of experience developing software with at least one of the following software development models: Waterfall, Iterative, Agile, BDD, or Dev Ops. Also requires 5 years of experience: programming with Java Swings; programming with application tools for Open JMS (Apache ActiveMQ); programming with at least one of the following databases: Oracle DBMS with PL/SQL, SQL Server or MySql; working with at least one of the following web service languages: XML, XSD, or WSDL; working with at least one of the following web application assets: HTML, XML/XSL Technologies, JavaScript, JSP/Servlets or CSS; developing with Java and J2EE; using at least one of the messaging tools and integration tools: Tibco, Websphere, ActiveMQ, or RabbitMQ; developing with .net, C#, VB.net, Java and Eclipse on Visual Studio; and working on Unix/Linux operating system. Requires 3 years of experience: programming with SOAP based or Rest Easy Framework web services; developing with object oriented design and programming; installing and configuring web servers for WebTier and Apache Tomcat; using at least one of the following defect tracking assets: VersionOne, TFS, or ClearQuest; and using Clearcase or Team Foundation Server source control assets. Requires 2 years of experience working with products integrated with SCADA system. Experience may be, but need not be, acquired concurrently."));
         vacancyList.add(new Vacancy("Software Engineer", "KVH Industries", Location.Oslo, Experience.Entry, 447000, "We are looking for an experienced Software Engineer to join our technology team who will be working on our Next Generation VSAT project. You will be developing, configuring, and packaging software in a hybrid-cloud and embedded systems environment. You will be managing and deploying software to devices over satellite communications. You will be working on a dynamic team practicing scrum and open source development methodologies."));
         vacancyList.add(new Vacancy("Java Developer", "Sportradar", Location.Bergen, Experience.Senior, 890000, "As a Full Stack Java Software Developer, you will participate in development of the core Sportradar product and services. Currently we are looking for developers within the fields of core live odds services, trading, scout planning and core backend systems. Our systems are daily used by thousands of users and handle millions of transactions. You will work in a small team of highly motivated developers and to a large degree, influence what tasks you will be assigned to and how the team should collaborate. You will be assigned to a team based on your own interest and experience. Development is mainly done in Java, but experience with other tools like JavaScript or PHP is a plus since our strategy is to use the most efficient tools depending on the situation. Our teams work closely with other development teams in Norway, Europe andUS. We have recently initiated new projects within several areas to take advantage of the flexibility and scalability of cloud services like AWS and Azure. This includes several training programs within cutting edge technologies for our employees."));
