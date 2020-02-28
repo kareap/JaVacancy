@@ -1,18 +1,13 @@
 package com.example.javacancy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Entity;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -184,13 +179,22 @@ public class JavacancyApplication {
         } else {
             m.addAttribute("application", application);
             m.addAttribute("vacancy", currentJob);
+            m.addAttribute("id", jobId);
             return "application";
         }
     }
 
-    @PostMapping("/application")
-    public String sentApplication(@ModelAttribute Application application) {
-        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
+    @PostMapping("/application/{jobId}")
+    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application) {
+
+        // Add random job ID
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        application.setApplicationId(String.valueOf(random.nextInt(100000, 499999)));
+
+        application.setVacancyId(jobId);
+
+        applicationRepository.save(application);
+//        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
 
 //        try (Connection connection = dataSource.getConnection();
 //             PreparedStatement preparedStatement = connection.prepareStatement

@@ -17,7 +17,7 @@
         </div>
 
         <div id="applicationForm">
-            <form action="/application" method="POST" th:object="${application}">
+            <form th:action="'/application/' + ${id}" method="POST" th:object="${application}">
                 <input required type="text" name="firstName" th:field="*{firstName}" placeholder="First Name" autofocus>
                 <input required type="text" name="lastName" th:field="*{lastName}" placeholder="Last Name">
                 <input required type="text" name="email" th:field="*{email}" placeholder="Email">
