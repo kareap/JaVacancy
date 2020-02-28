@@ -165,9 +165,9 @@ public class JavacancyApplication {
         }
         if (result.hasErrors()) {
             model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
-            return "/add";
+            return "addVacancy";
         }
-        addVacancy(vacancy);
+        addVacancy(vacancy)
         return "redirect:/";
     }
 
