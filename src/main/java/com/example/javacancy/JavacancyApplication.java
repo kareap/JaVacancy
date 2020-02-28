@@ -39,7 +39,7 @@ public class JavacancyApplication {
         this.applicationRepository = applicationRepository;
         this.vacancyRepository = vacancyRepository;
         vacancyList = (List<Vacancy>) vacancyRepository.findAll();
-        populateDatabase();
+        // populateDatabase();
     }
 
     public static void main(String[] args) {
