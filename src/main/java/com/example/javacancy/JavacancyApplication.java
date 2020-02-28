@@ -50,8 +50,8 @@ public class JavacancyApplication {
         // Populate database
         if(vacancyList.size() < 2){
             populateDatabase();
-            vacancyList = (List<Vacancy>) vacancyRepository.findAll();
         }
+        vacancyList = (List<Vacancy>) vacancyRepository.findAll();
         // Resett search results
         resetFilters();
         resetRelevanceScore();
