@@ -14,7 +14,7 @@ public class ApplicationValidator implements org.springframework.validation.Vali
         ValidationUtils.rejectIfEmpty(errors, "firstName", "firstName.empty");
         ValidationUtils.rejectIfEmpty(errors, "lastName", "lastName.empty");
         ValidationUtils.rejectIfEmpty(errors, "email", "email.empty");
-        ValidationUtils.rejectIfEmpty(errors, "phoneNumber", "phoneNumber.empty");
+//        ValidationUtils.rejectIfEmpty(errors, "phoneNumber", "phoneNumber.empty");
         ValidationUtils.rejectIfEmpty(errors, "applicationText", "applicationText.empty");
         Application application = (Application) object;
         if (application.getFirstName().length() < 2 || application.getFirstName().length() > 24){
@@ -30,7 +30,7 @@ public class ApplicationValidator implements org.springframework.validation.Vali
             errors.rejectValue("phoneNumber", "phoneNumber.length");
         }
 
-        if (!application.getPhoneNumber().contains("[0-9]+") ){
+        if (!errors.hasErrors() && application.getPhoneNumber().contains("[a-z]+")){
             errors.rejectValue("phoneNumber", "phoneNumber.digit");
         }
 
