@@ -162,24 +162,6 @@ public class JavacancyApplication {
             return "redirect:/";
         }
         return "jobPage";
-
-//        Vacancy currentJob = null;
-//
-//        // Find current job
-//        for (Vacancy v : vacancyList) {
-//            if (v.getJobId().equals(jobId)) {
-//                currentJob = v;
-//            }
-//        }
-//
-//        if (currentJob == null) {
-//            return "redirect:/";
-//        } else {
-//            m.addAttribute("vacancyList", vacancyList);
-//            m.addAttribute("job", currentJob);
-//            s.setAttribute("currentList", s.getAttribute("currentList"));
-//            return "jobPage";
-//        }
     }
 
     @GetMapping("/add")
@@ -200,6 +182,7 @@ public class JavacancyApplication {
             return "addVacancy";
         }
         addVacancy(vacancy);
+
         return "redirect:/";
     }
 

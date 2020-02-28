@@ -11,6 +11,8 @@ public class VacancyValidator implements org.springframework.validation.Validato
 
     @Override
     public void validate(Object object, Errors errors) {
+        Vacancy app = (Vacancy) object;
+
         ValidationUtils.rejectIfEmpty(errors, "jobTitle", "text.empty");
         ValidationUtils.rejectIfEmpty(errors, "companyName", "companyName.empty");
         ValidationUtils.rejectIfEmpty(errors, "location", "location.empty");
@@ -18,5 +20,20 @@ public class VacancyValidator implements org.springframework.validation.Validato
         ValidationUtils.rejectIfEmpty(errors, "salary", "salary.empty");
         ValidationUtils.rejectIfEmpty(errors, "jobDescription", "jobDescription.empty");
 
+        if(app.getJobTitle().length() < 2 && app.getJobTitle().length() < 40) {
+            errors.rejectValue("jobTitle", "Title must be between 2 and 40 characters");
+        }
+
+        if(app.getCompanyName().length() < 2 && app.getCompanyName().length() < 40) {
+            errors.rejectValue("companyName", "Company name must be between 2 and 40 characters");
+        }
+
+        if(app.getSalary() < 0) {
+            errors.rejectValue("salary", "Salary can not be negative");
+        }
+
+        if(app.getJobDescription().length() < 5 && app.getJobDescription().length() < 5000) {
+            errors.rejectValue("companyName", "Company name must be between 2 and 40 characters");
+        }
     }
 }

@@ -37,7 +37,7 @@ public class Vacancy implements Comparable<Vacancy> {
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        this.jobId = String.valueOf(random.nextInt(500000, 999999));
+        this.jobId = String.valueOf(random.nextInt(100000, 999999));
 
         //applicants = new ArrayList<>();
     }
@@ -125,4 +125,5 @@ public class Vacancy implements Comparable<Vacancy> {
     public void setJobDescription(String jobDescription) {
         this.jobDescription = jobDescription;
     }
+
 }
