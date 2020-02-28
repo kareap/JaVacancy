@@ -33,6 +33,10 @@ public class ApplicationValidator implements org.springframework.validation.Vali
         if (!errors.hasErrors() && application.getPhoneNumber().contains("[a-z]+")){
             errors.rejectValue("phoneNumber", "phoneNumber.digit");
         }
+        if (application.getEmail().length() > 40 || application.getEmail().contains("@")) {
+            errors.rejectValue("email", "NotValid.customer.email");
+        }
+
 
 
 
