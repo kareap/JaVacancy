@@ -167,7 +167,7 @@ public class JavacancyApplication {
             model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
             return "addVacancy";
         }
-        addVacancy(vacancy)
+        addVacancy(vacancy);
         return "redirect:/";
     }
 
@@ -193,15 +193,23 @@ public class JavacancyApplication {
         }
     }
 
+    //add application
     @PostMapping("/application/{jobId}")
-    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application) {
+    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application, Model model, BindingResult result) {
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
         application.setApplicationId(String.valueOf(random.nextInt(100000, 499999)));
-
         application.setVacancyId(jobId);
 
+        ApplicationValidator applicationValidator = new ApplicationValidator();
+        if (applicationValidator.supports(application.getClass())) {
+            applicationValidator.validate(application, result);
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
+            return "application";
+        }
         applicationRepository.save(application);
 //        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
 
@@ -217,7 +225,6 @@ public class JavacancyApplication {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-
         return "redirect:/success";
     }
 
