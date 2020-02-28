@@ -40,7 +40,7 @@ public class ApplicationValidator implements org.springframework.validation.Vali
             errors.rejectValue("phoneNumber", "phoneNumber.digit");
         }
 
-        if (application.getEmail().length() > 40 || application.getEmail().contains("@")) {
+        if (application.getEmail().length() > 40 || !application.getEmail().contains("@")) {
             errors.rejectValue("email", "NotValid.customer.email");
         }
     }
