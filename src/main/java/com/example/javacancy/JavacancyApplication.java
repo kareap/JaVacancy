@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -157,11 +158,19 @@ public class JavacancyApplication {
 
     // Add new vacancy
     @PostMapping("/add")
-    public String addVacancyPost(@ModelAttribute Vacancy vacancy) {
-        System.out.println(vacancy.getCompanyName());
+    public String addVacancyPost(@ModelAttribute Vacancy vacancy, Model model, BindingResult result) {
+        VacancyValidator vacancyValidator = new VacancyValidator();
+        if (vacancyValidator.supports(vacancy.getClass())) {
+            vacancyValidator.validate(vacancy, result);
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
+            return "/add";
+        }
         addVacancy(vacancy);
         return "redirect:/";
     }
+
 
     @GetMapping("/application/{jobId}")
     public String applicaton(@PathVariable String jobId, @ModelAttribute Application application, Model m) {
