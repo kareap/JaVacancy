@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -130,23 +131,54 @@ public class JavacancyApplication {
 
     @GetMapping("/vacancy/{jobId}")
     public String getVacancy(Model m, @PathVariable(required = true) String jobId, HttpSession s) {
-        Vacancy currentJob = null;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * from vacancy where job_id = ?");
+        ) {
+            ps.setString(1, jobId);
+            ps.execute();
 
-        // Find current job
-        for (Vacancy v : vacancyList) {
-            if (v.getJobId().equals(jobId)) {
-                currentJob = v;
+            ResultSet rs = ps.getResultSet();
+
+            if(rs.next()){
+                Vacancy currentJob = new Vacancy(
+                        rs.getString("job_id"),
+                        rs.getString("job_title"),
+                        rs.getString("company_name"),
+                        rs.getString("location"),
+                        rs.getString("experience"),
+                        rs.getInt("salary"),
+                        rs.getString("job_description"));
+
+                m.addAttribute("vacancyList", vacancyList);
+                m.addAttribute("job", currentJob);
+                s.setAttribute("currentList", s.getAttribute("currentList"));
+            } else {
+                return "redirect:/";
             }
-        }
 
-        if (currentJob == null) {
+        } catch (SQLException e) {
+            e.printStackTrace();
             return "redirect:/";
-        } else {
-            m.addAttribute("vacancyList", vacancyList);
-            m.addAttribute("job", currentJob);
-            s.setAttribute("currentList", s.getAttribute("currentList"));
-            return "jobPage";
         }
+        return "jobPage";
+
+//        Vacancy currentJob = null;
+//
+//        // Find current job
+//        for (Vacancy v : vacancyList) {
+//            if (v.getJobId().equals(jobId)) {
+//                currentJob = v;
+//            }
+//        }
+//
+//        if (currentJob == null) {
+//            return "redirect:/";
+//        } else {
+//            m.addAttribute("vacancyList", vacancyList);
+//            m.addAttribute("job", currentJob);
+//            s.setAttribute("currentList", s.getAttribute("currentList"));
+//            return "jobPage";
+//        }
     }
 
     @GetMapping("/add")
@@ -189,25 +221,11 @@ public class JavacancyApplication {
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        application.setApplicationId(String.valueOf(random.nextInt(100000, 499999)));
+        application.setApplicationId(String.valueOf(random.nextInt(100000, 999999)));
 
         application.setVacancyId(jobId);
 
         applicationRepository.save(application);
-//        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
-
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement
-//                     ("INSERT INTO Vacancy (Title, CompanyName, Location, Experience, Salary, JobDescription) VALUES (?,?,?,?,?,?)")) {
-//            preparedStatement.setString(1, application.getJobTitle());
-//            preparedStatement.setString(2, application.getCompanyName());
-//            preparedStatement.setString(3, application.getExperience().toString());
-//            preparedStatement.setString(4, application.getSalary().toString());
-//            preparedStatement.setString(5, application.getJobDescription());
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
 
         return "redirect:/success";
     }
@@ -302,7 +320,8 @@ public class JavacancyApplication {
     public void addVacancy(Vacancy vacancy) {
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        vacancy.setJobId(String.valueOf(random.nextInt(500000, 999999)));
+        vacancy.setJobId(String.valueOf(random.nextInt(100000, 999999)));
+
         vacancyRepository.save(vacancy);
     }
 

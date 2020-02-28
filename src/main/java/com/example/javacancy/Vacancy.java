@@ -42,6 +42,17 @@ public class Vacancy implements Comparable<Vacancy> {
         //applicants = new ArrayList<>();
     }
 
+    public Vacancy(String job_id, String job_title, String company_name, String location, String experience, int salary, String job_description) {
+        this.jobId = job_id;
+        this.jobTitle = job_title;
+        this.companyName = company_name;
+        this.location = Location.valueOf(location);
+        this.experience = Experience.valueOf(experience);
+        this.salary = salary;
+        this.jobDescription = job_description;
+
+    }
+
     public String getJobTitle() {
         return jobTitle;
     }
