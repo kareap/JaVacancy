@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import javax.validation.Valid;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -227,7 +228,7 @@ public class JavacancyApplication {
 
     //add application
     @PostMapping("/application/{jobId}")
-    public String sentApplication(@PathVariable String jobId, @ModelAttribute Application application, Model model, BindingResult result) {
+    public String sentApplication(@ModelAttribute Application application, @PathVariable String jobId, Model model, BindingResult result) {
 
         // Add random job ID
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -239,25 +240,9 @@ public class JavacancyApplication {
             applicationValidator.validate(application, result);
         }
         if (result.hasErrors()) {
-            model.addAttribute("errorMsg", "Validation failed, please add data to jobtitle");
-            return "application";
+            return "redirect:/application/"+jobId;
         }
         applicationRepository.save(application);
-
-//        Application newApplication = new Application(application.getFirstName(), application.getLastName(), application.getEmail(), application.getPhoneNumber(), application.getApplicationText());
-
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement
-//                     ("INSERT INTO Vacancy (Title, CompanyName, Location, Experience, Salary, JobDescription) VALUES (?,?,?,?,?,?)")) {
-//            preparedStatement.setString(1, application.getJobTitle());
-//            preparedStatement.setString(2, application.getCompanyName());
-//            preparedStatement.setString(3, application.getExperience().toString());
-//            preparedStatement.setString(4, application.getSalary().toString());
-//            preparedStatement.setString(5, application.getJobDescription());
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
 
         return "redirect:/success";
     }
